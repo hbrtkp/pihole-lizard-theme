@@ -1,0 +1,2881 @@
+/* ==========================================================================
+   pihole-theme :: "lizard" theme for Pi-hole v6 (DARK)
+   Style source: the "TheLizardWizard — Raspberry Pi Security Hardening Guide"
+   Leitmotif: the terminal block (header bar with a green dot and an uppercase
+   label), statistics cards with the value in JetBrains Mono, pills,
+   info/warn/success frames with a dimmed background, green accent.
+   Installation: takes over the slot of the built-in "high-contrast-dark"
+   theme (pihole-theme.sh script). The file loads AFTER pi-hole.css and AdminLTE.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Syne";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src:
+    local("Syne"),
+    url("lizard-syne.woff2") format("woff2");
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+  src:
+    local("JetBrains Mono"),
+    url("lizard-jbmono.woff2") format("woff2");
+}
+
+:root {
+  color-scheme: dark;
+  /* Guide palette (1:1) */
+  --lz-bg: #0d1117;
+  --lz-bg2: #161b22;
+  --lz-bg3: #1c2333;
+  --lz-border: #30363d;
+  --lz-border2: #3a424d;
+  --lz-text: #e6edf3;
+  --lz-text2: #8b949e;
+  --lz-text3: #868f99;
+  --lz-green: var(--theme-accent, #3fb950);
+  --lz-green-dim: var(--theme-accent-shade, #1a3a21);
+  --lz-green-bright: var(--theme-accent-bright, #56d364);
+  --lz-accent: var(--theme-accent-dark, #238636);
+  --lz-blue: #58a6ff;
+  --lz-blue-dim: #0d2644;
+  --lz-amber: #d29922;
+  --lz-amber-dim: #2d2008;
+  --lz-red: #f85149;
+  --lz-red-dim: #3b0f0e;
+  --lz-purple: #bc8cff;
+  --lz-purple-dim: #1f1635;
+
+  --lz-radius: 8px;
+  --lz-radius-lg: 10px;
+  --lz-font: "Syne", system-ui, sans-serif;
+  --lz-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+
+  /* Pi-hole variables (bar chart, tables, overlays) */
+  --allowed-color: #3fb950;
+  --blocked-color: #f85149;
+  --cached-color: #58a6ff;
+  --other-color: #6e7681;
+  --datatable-bgcolor: rgba(88, 166, 255, 0.14);
+  --overlay-bgcolor: rgba(13, 17, 23, 0.72);
+}
+
+/* ==========================================================================
+   Typography and base
+   ========================================================================== */
+html,
+body,
+.wrapper,
+.content-wrapper,
+.right-side {
+  background-color: var(--lz-bg);
+}
+body.layout-boxed {
+  background: #010409 none;
+}
+.layout-boxed .wrapper {
+  box-shadow: 0 0 0 1px var(--lz-border);
+}
+body,
+.main-header .logo,
+.popover,
+.tooltip,
+.dropdown-menu,
+.sidebar-menu,
+.main-footer {
+  font-family: var(--lz-font);
+}
+body {
+  color: var(--lz-text);
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6,
+.login-logo,
+.page-header {
+  font-family: var(--lz-font);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--lz-text);
+}
+.content-header > h1,
+.page-header,
+h1,
+.h1 {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+.content-header {
+  background-color: transparent;
+}
+.content-header > h1 > small {
+  color: var(--lz-text2);
+  letter-spacing: 0;
+  font-weight: 400;
+}
+.content-header > .breadcrumb > li > a {
+  color: var(--lz-text2);
+}
+.page-header {
+  border-color: var(--lz-border);
+}
+a {
+  color: var(--lz-blue);
+}
+a:hover,
+a:focus,
+a:active {
+  color: #79b8ff;
+}
+::selection {
+  background: var(--lz-accent);
+  color: #fff;
+}
+hr,
+.user-menu hr {
+  border-top-color: var(--lz-border);
+}
+code {
+  font-family: var(--lz-mono);
+  font-size: 12px;
+  color: var(--lz-purple);
+  background-color: var(--lz-bg2);
+  border: 1px solid var(--lz-border);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+pre,
+#output {
+  font-family: var(--lz-mono);
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--lz-text);
+  background-color: var(--lz-bg);
+  border: 1px solid var(--lz-border);
+  border-radius: var(--lz-radius);
+}
+kbd {
+  font-family: var(--lz-mono);
+  color: var(--lz-text);
+  background-color: var(--lz-bg3);
+  border: 1px solid var(--lz-border2);
+  border-radius: 4px;
+  box-shadow: none;
+  vertical-align: middle;
+}
+.text-muted {
+  color: var(--lz-text2);
+}
+label {
+  font-weight: 600;
+  color: var(--lz-text);
+}
+.help-block {
+  color: var(--lz-text2);
+}
+
+/* ==========================================================================
+   Top bar - bg2, thin bottom line, green line at the top (the guide's progress bar)
+   ========================================================================== */
+.main-header .navbar,
+.main-header .logo,
+.layout-top-nav .main-header > .logo,
+.main-header li.user-header {
+  background-color: var(--lz-bg2);
+  box-shadow: inset 0 -1px 0 var(--lz-border);
+}
+.main-header .logo {
+  color: var(--lz-text);
+  border-bottom: 0 solid transparent;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+.main-header .logo:hover,
+.layout-top-nav .main-header > .logo:hover {
+  background-color: var(--lz-bg3);
+}
+.main-header::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 3px;
+  background: var(--lz-green);
+  z-index: 1031;
+  pointer-events: none;
+}
+.main-header .navbar .nav > li > a,
+.main-header .navbar .nav > li > .navbar-text,
+.main-header .navbar .sidebar-toggle {
+  color: var(--lz-text2);
+  max-height: 50px;
+}
+.main-header .navbar .nav > li > a:hover,
+.main-header .navbar .nav > li > a:active,
+.main-header .navbar .nav > li > a:focus,
+.main-header .navbar .nav .open > a,
+.main-header .navbar .nav .open > a:hover,
+.main-header .navbar .nav .open > a:focus,
+.main-header .navbar .nav > .active > a,
+.main-header .navbar .sidebar-toggle:hover {
+  background-color: var(--lz-bg3);
+  color: var(--lz-text);
+}
+@media (max-width: 767px) {
+  .main-header .navbar .dropdown-menu li.divider {
+    background-color: var(--lz-border);
+  }
+  .main-header .navbar .dropdown-menu li a:hover {
+    background-color: var(--lz-bg3);
+  }
+}
+.navbar-custom-menu > .navbar-nav > li > .dropdown-menu,
+.navbar-nav > .user-menu > .dropdown-menu > .user-body,
+.navbar-nav > .user-menu > .dropdown-menu > .user-footer {
+  background: var(--lz-bg2);
+  border-color: var(--lz-border);
+  color: var(--lz-text);
+}
+.navbar-nav > .user-menu > .dropdown-menu > .user-body a,
+.navbar-nav > .user-menu > .dropdown-menu > .user-footer a {
+  color: var(--lz-blue) !important;
+}
+.navbar-nav > .user-menu > .dropdown-menu > .user-footer a:hover {
+  color: #79b8ff !important;
+}
+
+/* ==========================================================================
+   Sidebar - bg2; headers like "step-label"; active entry like a green pill
+   ========================================================================== */
+.main-sidebar,
+.left-side {
+  background-color: var(--lz-bg2);
+  box-shadow: inset -1px 0 0 var(--lz-border);
+}
+.user-panel > .info,
+.user-panel > .info > a {
+  color: var(--lz-text);
+}
+.sidebar a {
+  color: var(--lz-text2);
+}
+.sidebar a:hover {
+  text-decoration: none;
+}
+.sidebar-menu > li.header {
+  color: var(--lz-text3);
+  background-color: transparent;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding-top: 16px;
+  /* the section name starts on the same line as the left edge of the Status box and the
+     menu entry fields (8 px from the card edge); previously it stuck out 3 px to the left */
+  padding-left: 8px;
+}
+.sidebar-menu > li > a {
+  border-left: 0 solid transparent;
+  border: 1px solid transparent;
+}
+body:not(.sidebar-collapse) .sidebar-menu > li > a {
+  margin: 2px 8px;
+  padding-left: 12px;
+  border-radius: var(--lz-radius);
+}
+.sidebar-menu > li:hover > a,
+.sidebar-menu > li > a:focus {
+  color: var(--lz-text);
+  background-color: var(--lz-bg3);
+  border-color: var(--lz-border);
+}
+.sidebar-menu > li.active > a,
+.sidebar-menu > li.active:hover > a {
+  color: var(--lz-green);
+  background-color: var(--lz-green-dim);
+  border-color: var(--lz-accent);
+}
+.sidebar-menu > li > .treeview-menu {
+  margin: 0 8px;
+  background-color: transparent;
+}
+.treeview-menu > li > a {
+  color: var(--lz-text3);
+  border-radius: 6px;
+}
+.treeview-menu > li > a:hover,
+.treeview-menu > li > a:focus {
+  color: var(--lz-text);
+  background-color: var(--lz-bg3);
+}
+.treeview-menu > li.active > a {
+  color: var(--lz-green);
+  background-color: var(--lz-green-dim);
+}
+.sidebar-menu > li.menu-donate:hover > a,
+.sidebar-menu > li.menu-donate > a:focus {
+  background-color: var(--lz-bg3);
+}
+.sidebar-form {
+  border-radius: var(--lz-radius);
+  border: 1px solid var(--lz-border);
+  margin: 10px;
+}
+.sidebar-form input[type="text"],
+.sidebar-form .btn {
+  box-shadow: none;
+  background-color: var(--lz-bg);
+  border: 1px solid transparent;
+  height: 35px;
+  color: var(--lz-text);
+}
+.sidebar-form input[type="text"]:focus,
+.sidebar-form input[type="text"]:focus + .input-group-btn .btn {
+  background-color: var(--lz-bg3);
+  color: var(--lz-text);
+}
+.sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > a > span:not(.pull-right),
+.sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > .treeview-menu {
+  background-color: var(--lz-bg3);
+  border: 1px solid var(--lz-border);
+  color: var(--lz-text);
+}
+
+/* ==========================================================================
+   Statistics tiles = the guide's "stat-card" cards
+   (green uppercase label, value in JetBrains Mono, grey caption)
+   ========================================================================== */
+.small-box,
+.small-box.bg-aqua,
+.small-box.bg-red,
+.small-box.bg-yellow,
+.small-box.bg-green {
+  background-color: var(--lz-bg2) !important;
+  color: var(--lz-text) !important;
+  border: 1px solid var(--lz-border);
+  border-radius: var(--lz-radius);
+  box-shadow: none;
+  overflow: hidden;
+}
+.small-box p {
+  font-family: var(--lz-font);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--lz-green);
+}
+.small-box h3 {
+  font-family: var(--lz-mono);
+  font-weight: 600;
+  font-size: 30px;
+  letter-spacing: 0;
+  color: var(--lz-green); /* number in the accent green, the label in the bar is grey */
+}
+.small-box > .small-box-footer {
+  background: var(--lz-bg3);
+  border-top: 1px solid var(--lz-border);
+  color: var(--lz-text3);
+  font-family: var(--lz-mono);
+  font-size: 11px;
+}
+.small-box > .small-box-footer:hover {
+  background: var(--lz-bg3);
+  color: var(--lz-green);
+}
+/* No background drawings: the tile is a plain card - label, value, bar with a link */
+.small-box .icon {
+  display: none;
+}
+/* Tile as a small box: the label becomes a bar with a green dot (the same notation as
+   .box-header .box-title), the value under it, a bar with a link at the bottom */
+.small-box > .inner {
+  padding: 0;
+}
+.small-box p {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  padding: 10px 14px; /* with the line 39 px - the same as a box bar */
+  background: var(--lz-bg3);
+  border-bottom: 1px solid var(--lz-border);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: 1.6;
+  text-transform: uppercase;
+  color: var(--lz-text3);
+}
+.small-box p::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--lz-green);
+  flex: none;
+}
+.small-box h3 {
+  margin: 0;
+  padding: 20px 14px 18px; /* approx. 15 px of free space above and below the number */
+  text-align: right; /* right edge of the number in line with the arrow of the bottom bar */
+}
+/* The same classes outside the tiles (badges) - dimmed background + text colour */
+.bg-aqua {
+  background-color: var(--lz-blue-dim) !important;
+  color: var(--lz-blue) !important;
+}
+.bg-red {
+  background-color: var(--lz-red-dim) !important;
+  color: var(--lz-red) !important;
+}
+.bg-yellow {
+  background-color: var(--lz-amber-dim) !important;
+  color: var(--lz-amber) !important;
+}
+.bg-green {
+  background-color: var(--lz-green-dim) !important;
+  color: var(--lz-green) !important;
+}
+
+/* ==========================================================================
+   Boxes = terminal blocks: bg3 header bar + green dot + uppercase label
+   ========================================================================== */
+.box,
+.info-box,
+.panel,
+.well,
+.list-group .list-group-item,
+.nav-stacked > li > a,
+.timeline li .timeline-item {
+  background: var(--lz-bg2);
+  border: 1px solid var(--lz-border);
+  box-shadow: none;
+  color: var(--lz-text);
+}
+.box {
+  border-radius: var(--lz-radius);
+}
+.box.box-primary,
+.box.box-info,
+.box.box-default,
+.box.box-success,
+.box.box-warning,
+.box.box-danger {
+  border-color: var(--lz-border);
+}
+.box > .box-header {
+  background: var(--lz-bg3);
+  color: var(--lz-text3);
+  padding: 9px 14px;
+  border-radius: 7px 7px 0 0;
+  border-bottom: 1px solid var(--lz-border);
+}
+.box.collapsed-box > .box-header {
+  border-radius: 7px;
+  border-bottom-color: transparent;
+}
+.box-header.with-border {
+  border-bottom: 1px solid var(--lz-border);
+}
+.box-header .box-title {
+  font-family: var(--lz-font);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--lz-text3);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  line-height: 1.6;
+}
+.box-header .box-title::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--lz-green);
+  flex: none;
+}
+/* Every box has a green dot - including informational ones ("Forgot password?") and
+   settings boxes, which Pi-hole marks with the "warning" type purely decoratively. Red
+   stays only for boxes of the "danger" type. */
+.box.box-danger > .box-header .box-title::before {
+  background: var(--lz-red);
+}
+.box-header > .box-tools {
+  top: 6px;
+}
+.box-header > .box-tools .btn-box-tool,
+.box-header > .box-tools .fa,
+.box-header .fa-info-circle {
+  color: var(--lz-text3);
+}
+.box-header > .box-tools .btn-box-tool:hover {
+  color: var(--lz-green);
+}
+.box-footer {
+  background: var(--lz-bg2);
+  border-top: 1px solid var(--lz-border);
+  border-radius: 0 0 7px 7px;
+  color: var(--lz-text2);
+}
+.box .overlay,
+.overlay-wrapper .overlay {
+  background: var(--overlay-bgcolor);
+  border-radius: var(--lz-radius);
+}
+.box .overlay > .fa,
+.overlay-wrapper .overlay > .fa {
+  color: var(--lz-green);
+}
+.box.box-solid,
+.box.box-solid.box-info,
+.box.box-solid.box-primary {
+  border-color: var(--lz-border);
+}
+.box.box-solid > .box-header,
+.box.box-solid.box-info > .box-header,
+.box.box-solid.box-primary > .box-header {
+  background: var(--lz-bg3);
+  color: var(--lz-text3);
+}
+.box-comments .box-comment,
+.box-comment,
+.comment-text,
+.comment-text .username {
+  color: var(--lz-text);
+  border-color: var(--lz-border);
+}
+.info-box,
+.panel,
+.well {
+  border-radius: var(--lz-radius);
+}
+.panel-body {
+  background: var(--lz-bg2);
+}
+.panel-default > .panel-heading {
+  background: var(--lz-bg3);
+  border-color: var(--lz-border);
+  color: var(--lz-text);
+}
+.nav-stacked > li > a:hover {
+  background: var(--lz-bg3);
+}
+.timeline li .timeline-header {
+  border-color: var(--lz-border);
+  color: var(--lz-text);
+}
+.card {
+  border-radius: var(--lz-radius);
+  border-color: var(--lz-border);
+}
+
+/* ==========================================================================
+   Tables - header like a label; DataTables data in JetBrains Mono
+   ========================================================================== */
+.table > thead > tr > th,
+.table > thead > tr > td {
+  background-color: var(--lz-bg3);
+  color: var(--lz-text3);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--lz-border);
+  vertical-align: middle;
+}
+.table > tbody > tr > td,
+.table > tbody > tr > th,
+.table > tfoot > tr > td,
+.table > tfoot > tr > th {
+  border-top: 1px solid var(--lz-border);
+}
+.table > tfoot > tr > th {
+  color: var(--lz-text3);
+  font-size: 11px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+.dataTable > tbody > tr > td {
+  font-family: var(--lz-mono);
+  font-size: 12.5px;
+}
+.table-bordered,
+.table-bordered > thead > tr > th,
+.table-bordered > thead > tr > td,
+.table-bordered > tbody > tr > td,
+.table-bordered > tbody > tr > th,
+.table-bordered > tfoot > tr > td,
+.table-bordered > tfoot > tr > th {
+  border-color: var(--lz-border);
+}
+.table-striped > tbody > tr:nth-of-type(2n + 1),
+.table > tbody > tr.odd,
+.table > tfoot > tr.odd,
+.table > thead > tr.odd {
+  background-color: rgba(255, 255, 255, 0.018);
+}
+.table-hover > tbody > tr:hover,
+.table > tbody > tr.odd:hover,
+.table > tbody > tr.even:hover,
+.table > tfoot > tr.odd:hover,
+.table > tfoot > tr.even:hover,
+.table > thead > tr.odd:hover,
+.table > thead > tr.even:hover {
+  background-color: var(--lz-bg3);
+}
+td.highlight {
+  background-color: rgba(210, 153, 34, 0.18);
+}
+.dataTables_wrapper input[type="search"],
+.dataTables_wrapper select {
+  background: var(--lz-bg);
+  border: 1px solid var(--lz-border);
+  border-radius: 6px;
+  color: var(--lz-text);
+  font-family: var(--lz-mono);
+}
+.datatable-bt,
+.datatable-bt:active,
+.datatable-bt:active:focus,
+.datatable-bt:focus {
+  background: transparent;
+  border-color: var(--lz-border2);
+  color: var(--lz-text2);
+}
+.datatable-bt:hover,
+.datatable-bt:active:hover {
+  background: var(--lz-bg2);
+  border-color: var(--lz-green);
+  color: var(--lz-text);
+}
+
+/* Pagination */
+.pagination > li > a,
+.pagination > li > span,
+.dataTables_paginate .pagination li > a {
+  color: var(--lz-text2);
+  background-color: var(--lz-bg2);
+  border-color: var(--lz-border);
+  font-family: var(--lz-mono);
+  font-size: 12px;
+}
+.pagination > li > a:hover,
+.pagination > li > a:focus,
+.pagination > li > span:hover,
+.pagination > li > span:focus {
+  color: var(--lz-text);
+  background-color: var(--lz-bg3);
+  border-color: var(--lz-border2);
+}
+.pagination > .active > a,
+.pagination > .active > a:hover,
+.pagination > .active > a:focus,
+.pagination > .active > span,
+.pagination > .active > span:hover,
+.pagination > .active > span:focus {
+  color: var(--lz-green);
+  background-color: var(--lz-green-dim);
+  border-color: var(--lz-accent);
+}
+.pagination > .disabled > a,
+.pagination > .disabled > a:hover,
+.pagination > .disabled > a:focus,
+.pagination > .disabled > span,
+.pagination > .disabled > span:hover,
+.pagination > .disabled > span:focus {
+  color: var(--lz-text3);
+  background-color: var(--lz-bg2);
+  border-color: var(--lz-border);
+}
+
+/* ==========================================================================
+   Buttons - outlined, JetBrains Mono (like "Copy" / "Done" in the guide)
+   ========================================================================== */
+.btn {
+  font-family: var(--lz-mono);
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  box-shadow: none;
+  transition: all 0.15s;
+}
+.btn-xs,
+.btn-sm,
+.btn.btn-flat {
+  border-radius: 5px;
+}
+.btn-default,
+.btn-default.disabled,
+.btn-default[disabled] {
+  background-color: transparent;
+  border-color: var(--lz-border2);
+  color: var(--lz-text2);
+}
+.btn-default:hover,
+.btn-default:focus,
+.btn-default:active,
+.btn-default.active,
+.btn-default:active:focus,
+.btn-default:active:hover,
+.open > .dropdown-toggle.btn-default,
+.open > .dropdown-toggle.btn-default:hover,
+.open > .dropdown-toggle.btn-default:active {
+  background-color: var(--lz-bg2);
+  border-color: var(--lz-green);
+  color: var(--lz-text);
+}
+/* Primary / success = the "Done" state: dimmed green + accent border */
+.btn-primary,
+.btn-success,
+.btn-primary.disabled,
+.btn-primary[disabled],
+.btn-primary.form-control,
+.btn-primary.form-control:focus {
+  background-color: var(--lz-green-dim);
+  border-color: var(--lz-accent);
+  color: var(--lz-green);
+}
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.btn-primary:active:focus,
+.btn-primary:active:hover,
+.btn-primary.form-control:hover,
+.open > .dropdown-toggle.btn-primary,
+.btn-success:hover,
+.btn-success:focus,
+.btn-success:active,
+.btn-success.active,
+.btn-success:active:focus,
+.btn-success:active:hover {
+  background-color: var(--lz-accent);
+  border-color: var(--lz-green);
+  color: #fff;
+}
+.btn-danger {
+  background-color: var(--lz-red-dim);
+  border-color: rgba(248, 81, 73, 0.45);
+  color: var(--lz-red);
+}
+.btn-danger:hover,
+.btn-danger:focus,
+.btn-danger:active,
+.btn-danger.active,
+.btn-danger:active:focus,
+.btn-danger:active:hover {
+  background-color: #b62324;
+  border-color: var(--lz-red);
+  color: #fff;
+}
+.btn-warning {
+  background-color: var(--lz-amber-dim);
+  border-color: rgba(210, 153, 34, 0.45);
+  color: var(--lz-amber);
+}
+.btn-warning:hover,
+.btn-warning:focus,
+.btn-warning:active,
+.btn-warning.active,
+.btn-warning:active:focus,
+.btn-warning:active:hover {
+  background-color: #9e6a03;
+  border-color: var(--lz-amber);
+  color: #fff;
+}
+.btn-info {
+  background-color: var(--lz-blue-dim);
+  border-color: rgba(88, 166, 255, 0.4);
+  color: var(--lz-blue);
+}
+.btn-info:hover,
+.btn-info:focus,
+.btn-info:active,
+.btn-info.active {
+  background-color: #1f6feb;
+  border-color: var(--lz-blue);
+  color: #fff;
+}
+.btn-link {
+  color: var(--lz-blue);
+}
+.btn:focus,
+.btn:active:focus {
+  outline: 2px solid rgba(63, 185, 80, 0.45);
+  outline-offset: 2px;
+}
+.close,
+.close:hover,
+.close:focus {
+  color: var(--lz-text);
+  text-shadow: none;
+  opacity: 0.7;
+}
+
+/* ==========================================================================
+   Forms - fields like the inside of a code block
+   ========================================================================== */
+.form-control,
+.form-group input,
+.form-group textarea,
+.input-group input,
+.input-group textarea,
+.login-options input {
+  color: var(--lz-text);
+  background-color: var(--lz-bg);
+  border: 1px solid var(--lz-border);
+  border-radius: 6px;
+  box-shadow: none;
+  font-family: var(--lz-mono);
+  font-size: 13px;
+}
+.form-control:focus {
+  border-color: var(--lz-green);
+  box-shadow: 0 0 0 3px rgba(63, 185, 80, 0.2);
+}
+.form-control::placeholder {
+  color: var(--lz-text3);
+}
+.form-control[disabled],
+.form-control[readonly],
+fieldset[disabled] .form-control {
+  background-color: var(--lz-bg3);
+  color: var(--lz-text3);
+}
+.input-group .input-group-addon,
+.form-group .input-group-addon {
+  color: var(--lz-text2);
+  background-color: var(--lz-bg3);
+  border-color: var(--lz-border);
+}
+.has-error .form-control {
+  border-color: var(--lz-red);
+}
+.has-error .help-block,
+.has-error .control-label {
+  color: var(--lz-red);
+}
+.has-success .form-control {
+  border-color: var(--lz-green);
+}
+select option {
+  background: var(--lz-bg2);
+  color: var(--lz-text);
+}
+.bootstrap-select > .dropdown-toggle,
+.bootstrap-select > .dropdown-toggle:hover,
+.bootstrap-select > .dropdown-toggle:focus {
+  border-radius: 6px;
+  background-color: var(--lz-bg);
+  border-color: var(--lz-border);
+  color: var(--lz-text);
+}
+.select2 .select2-selection,
+.select2 .select2-selection .select2-selection__rendered,
+.select2-container--default .select2-selection--single,
+.select2-container--default .select2-selection--multiple,
+.select2-container--default.select2-container--open,
+.select2-dropdown,
+.select2-dropdown .select2-search__field {
+  background-color: var(--lz-bg);
+  border-color: var(--lz-border);
+  color: var(--lz-text);
+  border-radius: 6px;
+}
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+  background-color: var(--lz-accent);
+}
+input[type="checkbox"],
+input[type="radio"],
+progress {
+  accent-color: var(--lz-green);
+}
+[class*="icheck-"] > input:first-child + label::before,
+[class*="icheck-"] > input:first-child + input[type="hidden"] + label::before,
+.login-options [class*="icheck-"] > input:first-child + label::before,
+.login-options [class*="icheck-"] > input:first-child + input[type="hidden"] + label::before {
+  border-color: var(--lz-border2);
+  background-color: var(--lz-bg);
+  border-radius: 4px;
+}
+[class*="icheck-"] > input:first-child:checked + label::before,
+[class*="icheck-"] > input:first-child:checked + input[type="hidden"] + label::before {
+  background-color: var(--lz-accent);
+  border-color: var(--lz-green);
+}
+[class*="icheck-"] > input[type="radio"]:first-child + label::before {
+  border-radius: 50%;
+}
+.toggle.btn {
+  border-radius: 6px;
+}
+.toggle-handle {
+  background-color: var(--lz-bg3);
+  border-color: var(--lz-border2);
+}
+.toggle-off.btn {
+  background: var(--lz-bg);
+  color: var(--lz-text3);
+}
+input:-webkit-autofill,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-text-fill-color: var(--lz-text) !important;
+  -webkit-box-shadow: 0 0 0 1000px var(--lz-bg) inset;
+  transition: background-color 1s ease-in-out 0s;
+}
+
+/* ==========================================================================
+   Labels = pills; alerts and callouts = the guide's info/warn/success frames
+   ========================================================================== */
+.label,
+.badge {
+  font-family: var(--lz-mono);
+  font-weight: 600;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  padding: 0.25em 0.7em;
+}
+.label-primary,
+.label-success,
+.badge.bg-primary,
+.bg-primary {
+  background-color: var(--lz-green-dim) !important;
+  border-color: var(--lz-accent) !important;
+  color: var(--lz-green) !important;
+}
+.label-info {
+  background-color: var(--lz-blue-dim) !important;
+  border-color: rgba(88, 166, 255, 0.35) !important;
+  color: var(--lz-blue) !important;
+}
+.label-warning {
+  background-color: var(--lz-amber-dim) !important;
+  border-color: rgba(210, 153, 34, 0.4) !important;
+  color: var(--lz-amber) !important;
+}
+.label-danger {
+  background-color: var(--lz-red-dim) !important;
+  border-color: rgba(248, 81, 73, 0.4) !important;
+  color: var(--lz-red) !important;
+}
+.label-default {
+  background-color: var(--lz-bg3) !important;
+  border-color: var(--lz-border2) !important;
+  color: var(--lz-text3) !important;
+}
+.alert,
+.callout {
+  border-radius: var(--lz-radius);
+  border: 1px solid var(--lz-border);
+  border-left-width: 1px;
+  font-size: 13px;
+}
+.alert-info,
+.callout.callout-info {
+  background-color: var(--lz-blue-dim) !important;
+  border-color: rgba(88, 166, 255, 0.3) !important;
+  color: #7ab7ff !important;
+}
+.alert-success,
+.callout.callout-success {
+  background-color: var(--lz-green-dim) !important;
+  border-color: rgba(63, 185, 80, 0.3) !important;
+  color: var(--lz-green-bright) !important;
+}
+.alert-warning,
+.callout.callout-warning {
+  background-color: var(--lz-amber-dim) !important;
+  border-color: rgba(210, 153, 34, 0.35) !important;
+  color: var(--lz-amber) !important;
+}
+.alert-danger,
+.alert-error,
+.callout.callout-danger {
+  background-color: var(--lz-red-dim) !important;
+  border-color: rgba(248, 81, 73, 0.35) !important;
+  color: #ff7b72 !important;
+}
+.alert a,
+.callout a {
+  color: var(--lz-text);
+  text-decoration: underline;
+}
+.callout h4,
+.alert h4 {
+  color: inherit;
+}
+
+/* ==========================================================================
+   Tabs, dropdowns, modals
+   ========================================================================== */
+.nav-tabs-custom {
+  background: var(--lz-bg2);
+  border: 1px solid var(--lz-border);
+  border-radius: var(--lz-radius);
+  box-shadow: none;
+}
+.nav-tabs-custom > .nav-tabs,
+.nav-tabs-custom .nav-tabs {
+  background: var(--lz-bg3);
+  border-bottom-color: var(--lz-border);
+  border-radius: 7px 7px 0 0;
+}
+.nav-tabs-custom > .nav-tabs > li {
+  margin-right: 1px;
+  border-top: 3px solid transparent;
+}
+.nav-tabs-custom > .nav-tabs > li.active {
+  border-top-color: var(--lz-green);
+}
+.nav-tabs-custom > .nav-tabs > li:first-of-type,
+.nav-tabs-custom > .nav-tabs > li:first-of-type > a {
+  border-top-left-radius: 7px;
+}
+.nav-tabs-custom > .nav-tabs > li:not(.active):hover {
+  background: var(--lz-bg2);
+  border-top-color: var(--lz-border2);
+}
+.nav-tabs-custom > .nav-tabs > li > a,
+.nav-tabs-custom > .nav-tabs > li:hover > a {
+  color: var(--lz-text2);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.nav-tabs-custom > .nav-tabs > li.active > a,
+.nav-tabs-custom > .nav-tabs > li.active:hover > a,
+.nav-tabs-custom > .nav-tabs > li > a:focus {
+  background: var(--lz-bg2);
+  color: var(--lz-text);
+  border-color: transparent var(--lz-border);
+}
+.nav-tabs-custom .tab-content {
+  background: var(--lz-bg2);
+  color: var(--lz-text);
+  border-radius: 0 0 7px 7px;
+}
+.dropdown-menu,
+.popover,
+.daterangepicker,
+.daterangepicker .calendar-table {
+  background-color: var(--lz-bg2);
+  border: 1px solid var(--lz-border);
+  color: var(--lz-text);
+}
+.dropdown-menu {
+  border-radius: var(--lz-radius);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+.dropdown-menu > li > a {
+  color: var(--lz-text);
+}
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  background-color: var(--lz-bg3);
+  color: var(--lz-text);
+}
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus {
+  background-color: var(--lz-green-dim);
+  color: var(--lz-green);
+}
+.dropdown-menu .divider {
+  background-color: var(--lz-border);
+}
+.modal-content {
+  background: var(--lz-bg2);
+  border: 1px solid var(--lz-border);
+  border-radius: var(--lz-radius-lg);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+  color: var(--lz-text);
+}
+.modal-header {
+  background: var(--lz-bg3);
+  border-bottom-color: var(--lz-border);
+  border-radius: 9px 9px 0 0;
+}
+.modal-footer {
+  border-top-color: var(--lz-border);
+}
+.modal-backdrop {
+  background-color: #010409;
+}
+.popover {
+  border-radius: var(--lz-radius);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+.popover-title {
+  background: var(--lz-bg3);
+  border-bottom-color: var(--lz-border);
+  color: var(--lz-text);
+}
+.popover.top > .arrow::after {
+  border-top-color: var(--lz-bg2);
+}
+.popover.bottom > .arrow::after {
+  border-bottom-color: var(--lz-bg3);
+}
+.tooltip-inner {
+  background-color: var(--lz-bg3);
+  border: 1px solid var(--lz-border2);
+  color: var(--lz-text);
+  border-radius: 6px;
+  font-family: var(--lz-mono);
+  font-size: 11px;
+}
+.daterangepicker {
+  border-radius: var(--lz-radius);
+}
+.daterangepicker td.off,
+.daterangepicker td.off.in-range,
+.daterangepicker td.off.start-date,
+.daterangepicker td.off.end-date {
+  background-color: var(--lz-bg2);
+  color: var(--lz-text3);
+}
+.daterangepicker td.active,
+.daterangepicker td.active:hover,
+.daterangepicker .ranges li.active {
+  background-color: var(--lz-accent);
+  color: #fff;
+}
+.daterangepicker td.in-range,
+.daterangepicker td.in-range:hover {
+  background-color: var(--lz-green-dim);
+  color: var(--lz-text);
+}
+.daterangepicker td.available:hover,
+.daterangepicker th.available:hover,
+.daterangepicker .ranges li:hover {
+  background-color: var(--lz-bg3);
+  color: var(--lz-text);
+}
+.daterangepicker select.hourselect,
+.daterangepicker select.minuteselect,
+.daterangepicker select.secondselect,
+.daterangepicker select.ampmselect {
+  background: var(--lz-bg);
+  border-color: var(--lz-border);
+  color: var(--lz-text);
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+.main-footer,
+.main-footer .tab-content {
+  background: var(--lz-bg2);
+  color: var(--lz-text3);
+  border-top: 1px solid var(--lz-border);
+}
+.main-footer a {
+  color: var(--lz-blue);
+}
+.main-footer strong,
+.main-footer b {
+  color: var(--lz-text2);
+}
+.main-footer .nav-tabs {
+  border-color: var(--lz-border);
+}
+
+/* ==========================================================================
+   Login - bg2 card with a green line at the top
+   ========================================================================== */
+body.login-page,
+body.login-page.layout-boxed,
+.login-page {
+  background: var(--lz-bg) none;
+}
+.login-box,
+#loginform {
+  background: var(--lz-bg2);
+}
+/* green outline around the card - the same thickness and colour as the former line on the top edge */
+.login-box {
+  border: 3px solid var(--lz-green);
+  border-radius: var(--lz-radius-lg);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  padding: 10px 5px 5px;
+}
+.login-box .box,
+.login-box .card,
+.login-box .login-card-body,
+.login-box-body {
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+}
+.login-box .box > .box-header {
+  background: transparent;
+  border-bottom: 0;
+}
+.login-logo,
+.login-logo a {
+  color: var(--lz-text);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+#loginform input {
+  border-color: var(--lz-border);
+}
+.login-footer,
+.login-footer a {
+  color: var(--lz-text2);
+}
+
+/* ==========================================================================
+   Pi-hole specific elements
+   ========================================================================== */
+.save-button-container {
+  background: rgba(22, 27, 34, 0.94);
+  border: 1px solid var(--lz-border2);
+  border-radius: var(--lz-radius-lg);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+.not-used {
+  background-color: var(--lz-bg3);
+}
+.not-used:hover {
+  background-color: var(--lz-border);
+}
+.used {
+  background-color: var(--lz-bg2);
+}
+.used:hover {
+  background-color: var(--lz-bg3);
+}
+.graphs-grid {
+  background-color: rgba(255, 255, 255, 0.07);
+}
+.graphs-ticks {
+  color: var(--lz-text2);
+}
+.progress {
+  background-color: var(--lz-bg3);
+  border-radius: 20px;
+  box-shadow: none;
+}
+.progress-bar,
+.progress-bar-primary,
+.progress-bar-success,
+.progress-bar-green {
+  background-color: var(--lz-green);
+}
+.progress-bar-warning,
+.progress-bar-yellow {
+  background-color: var(--lz-amber);
+}
+.progress-bar-danger,
+.progress-bar-red {
+  background-color: var(--lz-red);
+}
+.chartjs-tooltip {
+  background: var(--lz-bg3);
+  border: 1px solid var(--lz-border2);
+  border-radius: var(--lz-radius);
+  font-family: var(--lz-mono);
+}
+
+/* Statuses (Query Log, sidebar) */
+.text-green-light {
+  color: var(--lz-green-bright) !important;
+}
+.text-green {
+  color: var(--lz-green) !important;
+}
+.text-orange,
+.text-yellow {
+  color: var(--lz-amber) !important;
+}
+.text-red {
+  color: var(--lz-red) !important;
+}
+.text-vivid-blue,
+.text-blue,
+.text-light-blue,
+.text-aqua {
+  color: var(--lz-blue) !important;
+}
+.text-purple {
+  color: var(--lz-purple) !important;
+}
+
+/* Debug log */
+.log-red {
+  color: var(--lz-red);
+}
+.log-green {
+  color: var(--lz-green-bright);
+}
+.log-yellow {
+  color: var(--lz-amber);
+}
+.log-blue {
+  color: var(--lz-blue);
+}
+.log-purple {
+  color: var(--lz-purple);
+}
+.log-cyan {
+  color: #39c5cf;
+}
+.log-gray {
+  color: var(--lz-text3);
+}
+
+/* Network table */
+
+* {
+  scrollbar-color: var(--lz-border2) transparent;
+}
+
+/* Menu toggle button - Pi-hole uses its own class (.sidebar-toggle-svg), not .sidebar-toggle */
+.sidebar-toggle-svg {
+  color: var(--lz-text2);
+}
+.sidebar-toggle-svg:hover,
+.sidebar-toggle-svg:focus {
+  color: var(--lz-text);
+  background: var(--lz-bg3);
+}
+
+/* ==========================================================================
+   Status panel = terminal block: "Status" header with a green dot,
+   readings in JetBrains Mono. Logo hidden in the expanded sidebar - the
+   monospace font does not fit next to it at a readable size (measured for
+   "Load: 12.34 / 10.11 / 9.87"); in the collapsed sidebar the logo comes back.
+   ========================================================================== */
+body:not(.sidebar-collapse) .user-panel {
+  display: block;
+  width: auto; /* AdminLTE: width 100% - with margins it would stick out of the sidebar */
+  margin: 12px 8px 4px;
+  padding: 0;
+  background: var(--lz-bg);
+  border: 1px solid var(--lz-border);
+  border-radius: var(--lz-radius);
+  overflow: hidden;
+}
+body:not(.sidebar-collapse) .user-panel .image,
+body:not(.sidebar-collapse) .user-panel > .info > br {
+  display: none;
+}
+body:not(.sidebar-collapse) .user-panel > .info {
+  display: block;
+  float: none !important; /* the template adds .pull-left - the block should take the full width */
+  width: auto;
+  padding: 0 0 8px;
+}
+body:not(.sidebar-collapse) .user-panel > .info > p {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 7px;
+  padding: 7px 10px;
+  background: var(--lz-bg3);
+  border-bottom: 1px solid var(--lz-border);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--lz-text3);
+}
+body:not(.sidebar-collapse) .user-panel > .info > p::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--lz-green);
+  flex: none;
+}
+.user-panel > .info > span {
+  font-family: var(--lz-mono);
+  font-size: 10.5px;
+  line-height: 1.75;
+  white-space: nowrap;
+}
+body:not(.sidebar-collapse) .user-panel > .info > span {
+  display: block;
+  margin: 0;
+  padding: 0 10px;
+}
+
+/* ==========================================================================
+   Additions after an audit of all pages (scanner: stock AdminLTE / Bootstrap
+   colours and text contrast below 4.5). Elements not visible on the
+   dashboard: form field states, badges, lists, error pages.
+   ========================================================================== */
+.table td,
+.table th,
+.table > thead > tr > td,
+.table > thead > tr > th,
+.table > tbody > tr > td,
+.table > tbody > tr > th,
+.table > tfoot > tr > td,
+.table > tfoot > tr > th {
+  border-color: var(--lz-border); /* tables without <tbody> bypass the .table > tbody > tr > td rules */
+}
+.text-danger,
+.error-headline.text-danger {
+  color: #ff7b72;
+}
+.text-success {
+  color: var(--lz-green-bright);
+}
+.text-warning {
+  color: var(--lz-amber);
+}
+.text-info,
+.text-primary {
+  color: var(--lz-blue);
+}
+.page-header > small,
+.content-header small {
+  color: var(--lz-text2);
+}
+.badge {
+  background-color: var(--lz-bg3);
+  color: var(--lz-text2);
+}
+/* AdminLTE colours field states with .form-group.has-* rules - the same specificity is needed */
+.form-group.has-error label,
+.form-group.has-error .help-block,
+.form-group.has-error .control-label {
+  color: #ff7b72;
+}
+.form-group.has-error .form-control,
+.form-group.has-error .input-group-addon {
+  border-color: #ff7b72;
+}
+.form-group.has-success label,
+.form-group.has-success .help-block,
+.form-group.has-success .control-label {
+  color: var(--lz-green-bright);
+}
+.form-group.has-success .form-control,
+.form-group.has-success .input-group-addon {
+  border-color: var(--lz-green-bright);
+}
+.form-group.has-warning label,
+.form-group.has-warning .help-block,
+.form-group.has-warning .control-label {
+  color: var(--lz-amber);
+}
+.form-group.has-warning .form-control,
+.form-group.has-warning .input-group-addon {
+  border-color: var(--lz-amber);
+}
+.list-group-item,
+a.list-group-item,
+button.list-group-item {
+  background-color: var(--lz-bg2);
+  border-color: var(--lz-border);
+  color: var(--lz-text);
+}
+a.list-group-item:hover,
+a.list-group-item:focus,
+button.list-group-item:hover {
+  background-color: var(--lz-bg3);
+  color: var(--lz-text);
+}
+.list-group-item.active,
+.list-group-item.active:hover,
+.list-group-item.active:focus {
+  background-color: var(--lz-green-dim);
+  border-color: var(--lz-green-dim);
+  color: var(--lz-green);
+}
+/* close button: Bootstrap gives it opacity 0.2 (contrast approx. 1.5) */
+.close {
+  opacity: 0.65;
+}
+.close:hover,
+.close:focus {
+  opacity: 1;
+}
+
+.text-black {
+  color: var(--lz-text) !important;
+}
+
+/* Server status (add-on): lines under the temperature, in the same font as the Pi-hole indicators */
+/* no separator line: here only the list age sits under the temperature */
+.user-panel > .info > #server-status {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+.user-panel > .info .server-status-line {
+  display: block;
+  white-space: nowrap;
+}
+#server-status:empty {
+  display: none !important;
+}
+body:not(.sidebar-collapse) .user-panel > .info > #server-status {
+  margin: 0;
+  padding: 0 10px;
+}
+body:not(.sidebar-collapse) .user-panel > .info > #server-status .server-status-line {
+  padding: 0;
+}
+
+/* Frequency bars in the "Top ..." tables: Pi-hole semantic classes take precedence
+   over the general progress bar colour */
+.progress-bar.queries-permitted {
+  background-color: var(--allowed-color);
+}
+.progress-bar.queries-blocked {
+  background-color: var(--blocked-color);
+}
+.progress-bar.queries-cached {
+  background-color: var(--cached-color);
+}
+.progress-bar.queries-other {
+  background-color: var(--other-color);
+}
+
+/* ==========================================================================
+   Charts
+   Variables read by pihole-theme-addons.js; the palette order matches the
+   Pi-hole indices (query types: A=0, AAAA=1, SRV=3, SOA=4, PTR=5, TXT=6,
+   SVCB=13, HTTPS=14; devices in "Client activity": 0..n).
+   The legend and the tooltip are plain HTML - styled here, they work without the add-on too.
+   ========================================================================== */
+:root {
+  --chart-palette: #3fb950, #58a6ff, #bc8cff, #d29922, #f85149, #39c5cf, #f778ba, #8b949e, #56d364, #79c0ff, #d2a8ff, #e3b341, #ff7b72, #76e3ea, #ffa198, #6e7681;
+  --brand-fav-bg: var(--lz-bg3);
+  --brand-fav-fg: var(--lz-green);
+  --chart-center: var(--lz-text);
+  --chart-font: "JetBrains Mono", ui-monospace, Consolas, monospace; /* numbers on charts like tile values */
+}
+.chart-legend ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.chart-legend li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 1px 10px 1px 5px;
+  border-radius: 999px;
+  line-height: 1.35;
+  font-size: 14px;
+}
+.chart-legend li:hover {
+  background: var(--lz-bg3);
+}
+.chart-legend .colorBoxWrapper {
+  font-size: 11px;
+}
+/* coloured dot instead of a checkbox; hidden entry = dimmed dot */
+.chart-legend .colorBoxWrapper.fa-check-square::before {
+  content: "\f111";
+}
+.chart-legend .colorBoxWrapper.fa-square::before {
+  content: "\f111";
+  opacity: 0.25;
+}
+.chart-legend a.legend-label-text {
+  color: inherit;
+  font-weight: 500;
+}
+.chart-legend li {
+  font-family: var(--lz-mono);
+  font-size: 12px;
+}
+.chartjs-tooltip {
+  border-radius: 8px;
+  padding: 8px 12px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.2);
+  font-size: 12.5px;
+}
+.chartjs-tooltip th {
+  font-weight: 600;
+  padding-bottom: 5px;
+}
+.chartjs-tooltip-key {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-right: 6px;
+  vertical-align: baseline;
+}
+.chartjs-tooltip.bottom .arrow {
+  border-top-color: #1c2333;
+}
+.chartjs-tooltip.top .arrow {
+  border-bottom-color: #1c2333;
+}
+.chartjs-tooltip.right.center .arrow {
+  border-left-color: #1c2333;
+}
+.chartjs-tooltip.left.center .arrow {
+  border-right-color: #1c2333;
+}
+
+/* ==========================================================================
+   Headings like box bar labels
+   Instead of the big, wide face (Syne 800) - the same notation as in the
+   "Total queries" bars: letter-spaced uppercase, weight 600, green dot.
+   ========================================================================== */
+h1,
+.h1,
+h2,
+.h2,
+h3,
+.h3,
+h4,
+.h4,
+h5,
+.h5,
+h6,
+.h6,
+.page-header,
+.content-header > h1,
+.login-logo,
+.login-logo a,
+.main-header .logo {
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--lz-text2);
+}
+h1,
+.h1,
+.page-header,
+.content-header > h1,
+.login-logo,
+.login-logo a,
+.main-header .logo {
+  font-size: 14px;
+}
+h2,
+.h2 {
+  font-size: 13px;
+}
+h3,
+.h3,
+h4,
+.h4,
+h5,
+.h5,
+h6,
+.h6 {
+  font-size: 12px;
+}
+/* Page title in the same frame as a collapsed box (e.g. "Advanced filtering"):
+   bar background, 1 px border, 8 px radius, 52 px height, title notation as in box bars.
+   On settings pages the Basic / Expert switch sits in the same frame, on the right. */
+.page-header,
+.content-header > h1 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  margin: 0 0 20px;
+  padding: 0 15px;
+  background: var(--lz-bg3);
+  border: 1px solid var(--lz-border);
+  border-radius: var(--lz-radius);
+  line-height: 1.6;
+}
+.page-header > h1,
+.page-header > .h1,
+.content-header > h1 {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  color: var(--lz-text3);
+}
+.page-header > h1::before,
+.page-header > .h1::before,
+.content-header > h1::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--lz-green);
+  flex: none;
+}
+.page-header > .settings-selector {
+  margin-left: auto;
+}
+/* .page-header is the container; the actual <h1> inside has Bootstrap's default margins
+   (20 px / 10 px), which would shift the text relative to the dot */
+.page-header > h1,
+.page-header > .h1 {
+  margin: 0;
+  line-height: inherit;
+}
+/* login page: the template sets the text size with an inline style */
+.login-logo .logo-lg,
+.login-logo .logo-lg::after {
+  font-size: 14px !important;
+}
+/* exceptions: the tile value is data (JetBrains Mono), not a heading */
+.small-box h3 {
+  font-size: 30px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--lz-green); /* number in the accent green, the label in the bar is grey */
+}
+.callout h4,
+.alert h4 {
+  color: inherit;
+}
+
+/* ==========================================================================
+   No "Donate" entry in the menu and no heart line in the footer
+   ========================================================================== */
+.sidebar-menu > li.menu-donate,
+.sidebar-menu > li.header:has(+ li.menu-donate) {
+  display: none;
+}
+.main-footer > .row:has(a[href*="pi-hole.net/donate"]) {
+  display: none;
+}
+/* Login page: no Documentation / GitHub / Discourse buttons and no heart line.
+   !important, because the template gives this block display: flex with an inline style. */
+.login-footer {
+  display: none !important;
+}
+.login-donate {
+  display: none;
+}
+/* after removing the buttons: no empty space under the "Forgot password?" box */
+.login-box #forgot-pw-box,
+.login-box .panel,
+.login-box .card {
+  margin-bottom: 0;
+}
+
+/* ==========================================================================
+   "Top ..." tables on the dashboard
+   Data (domains, addresses, numbers) in JetBrains Mono as in the Query Log - Syne has
+   digits of uneven height, which made the number column look ragged. Numbers to the
+   right, no vertical grid lines, thicker frequency bar.
+   ========================================================================== */
+#domain-frequency .table,
+#ad-frequency .table,
+#client-frequency .table,
+#client-frequency-blocked .table {
+  border: 0;
+  margin-bottom: 0;
+}
+#domain-frequency .table > thead > tr > th,
+#ad-frequency .table > thead > tr > th,
+#client-frequency .table > thead > tr > th,
+#client-frequency-blocked .table > thead > tr > th,
+#domain-frequency .table > tbody > tr > td,
+#ad-frequency .table > tbody > tr > td,
+#client-frequency .table > tbody > tr > td,
+#client-frequency-blocked .table > tbody > tr > td {
+  border-left: 0;
+  border-right: 0;
+}
+#domain-frequency .table > tbody > tr > td,
+#ad-frequency .table > tbody > tr > td,
+#client-frequency .table > tbody > tr > td,
+#client-frequency-blocked .table > tbody > tr > td {
+  font-family: var(--lz-mono);
+  font-size: 12.5px;
+  padding: 7px 10px;
+  vertical-align: middle;
+}
+#domain-frequency .table > tbody > tr:last-child > td,
+#ad-frequency .table > tbody > tr:last-child > td,
+#client-frequency .table > tbody > tr:last-child > td,
+#client-frequency-blocked .table > tbody > tr:last-child > td {
+  border-bottom: 0;
+}
+/* number column (Hits / Requests) to the right, together with the header */
+#domain-frequency .table tr > :nth-child(2),
+#ad-frequency .table tr > :nth-child(2),
+#client-frequency .table tr > :nth-child(2),
+#client-frequency-blocked .table tr > :nth-child(2) {
+  text-align: right;
+  white-space: nowrap;
+}
+#domain-frequency .table tr > :nth-child(3),
+#ad-frequency .table tr > :nth-child(3),
+#client-frequency .table tr > :nth-child(3),
+#client-frequency-blocked .table tr > :nth-child(3) {
+  width: 30%;
+  padding-left: 18px;
+}
+/* names as data, not as blue links: text colour, green on hover */
+#domain-frequency .table td a,
+#ad-frequency .table td a,
+#client-frequency .table td a,
+#client-frequency-blocked .table td a {
+  color: var(--lz-text);
+}
+#domain-frequency .table td a:hover,
+#ad-frequency .table td a:hover,
+#client-frequency .table td a:hover,
+#client-frequency-blocked .table td a:hover {
+  color: var(--lz-green);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+#domain-frequency .progress,
+#ad-frequency .progress,
+#client-frequency .progress,
+#client-frequency-blocked .progress {
+  height: 8px;
+  margin: 0;
+}
+
+/* ==========================================================================
+   Query Log
+   ========================================================================== */
+/* filter fields in the table footer - Pi-hole inserts a plain <input> without a class */
+.dataTable tfoot input,
+table.table tfoot input[type="text"] {
+  width: 100%;
+  padding: 4px 8px;
+  background: var(--lz-bg);
+  border: 1px solid var(--lz-border);
+  border-radius: 6px;
+  color: var(--lz-text);
+  font-family: var(--lz-mono);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.dataTable tfoot input:focus,
+table.table tfoot input[type="text"]:focus {
+  outline: 0;
+  border-color: var(--lz-green);
+  box-shadow: 0 0 0 3px rgba(63, 185, 80, 0.2);
+}
+.dataTable tfoot input::placeholder,
+table.table tfoot input[type="text"]::placeholder {
+  color: var(--lz-text3);
+}
+/* row tint: barely visible - when viewing only blocked queries the stock
+   10% red tinted the whole table */
+.blocked-row td {
+  background-color: rgba(248, 81, 73, 0.06);
+}
+.allowed-row td {
+  background-color: transparent;
+}
+.table-hover > tbody > tr.blocked-row:hover > td {
+  background-color: rgba(248, 81, 73, 0.12);
+}
+
+/* Paths and commands in titles (e.g. "tail -f /var/log/pihole/pihole.log") without uppercase:
+   on Linux the case of a path matters */
+.box-title code,
+.page-header code,
+h1 code,
+h2 code,
+h3 code,
+h4 code {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* ==========================================================================
+   Management tables (Groups, Clients, Domains, Lists)
+   ========================================================================== */
+/* Row checkbox: stock bright border in the text colour, stuck to the top of the cell.
+   Here: dark field with a thin border, vertically centred; checked = green. */
+table.dataTable tbody td.select-checkbox::before,
+table.dataTable tbody th.select-checkbox::before {
+  top: 50%;
+  border: 1px solid var(--lz-border2);
+  border-radius: 3px;
+  background: var(--lz-bg);
+}
+table.dataTable tr.selected td.select-checkbox::after,
+table.dataTable tr.selected th.select-checkbox::after {
+  top: 50%;
+  border-color: var(--lz-green);
+}
+table.dataTable tr.selected td.select-checkbox::before,
+table.dataTable tr.selected th.select-checkbox::before {
+  border-color: var(--lz-accent);
+  background: var(--lz-green-dim);
+}
+table.dataTable tbody td.select-checkbox:hover::before {
+  border-color: var(--lz-green);
+}
+
+/* Toggles (bootstrap-toggle): smaller font - the "Disabled" text was cut off at the
+   80 px width - and a fully visible knob instead of a narrow dark strip.
+   The colour depends on the STYLE of the state, not on whether the toggle is on:
+   Enabled = success (green), Disabled = default (grey), but in the settings
+   Expert = danger (red) and Basic = success (green). */
+.toggle.btn {
+  border-radius: 6px;
+  overflow: hidden;
+}
+.toggle.btn.btn-default {
+  background-color: var(--lz-bg);
+  border-color: var(--lz-border2);
+}
+.toggle .toggle-group label.btn {
+  border: 0;
+  border-radius: 0;
+  font-size: 10.5px;
+  line-height: 18px;
+  letter-spacing: 0;
+  text-align: center;
+  text-transform: none; /* in the page header (Basic / Expert) it would inherit the uppercase */
+}
+.toggle .toggle-group label.toggle-on {
+  padding: 5px 22px 5px 4px;
+}
+.toggle .toggle-group label.toggle-off {
+  padding: 5px 4px 5px 22px;
+}
+.toggle .toggle-group label.btn-success {
+  background-color: var(--lz-green-dim);
+  color: var(--lz-green);
+}
+.toggle .toggle-group label.btn-danger {
+  background-color: var(--lz-red-dim);
+  color: var(--lz-red);
+}
+.toggle .toggle-group label.btn-primary,
+.toggle .toggle-group label.btn-info {
+  background-color: var(--lz-blue-dim);
+  color: var(--lz-blue);
+}
+.toggle .toggle-group label.btn-warning {
+  background-color: var(--lz-amber-dim);
+  color: var(--lz-amber);
+}
+.toggle .toggle-group label.btn-default {
+  background-color: var(--lz-bg);
+  color: var(--lz-text3);
+}
+.toggle.btn.btn-primary,
+.toggle.btn.btn-info {
+  border-color: rgba(88, 166, 255, 0.4);
+}
+/* knob: the library places it on the boundary of both states, so only half of it is
+   visible - shifting it by half its width (18 px / 2) shows it whole */
+.toggle .toggle-handle,
+.toggle .toggle-handle.btn {
+  padding: 0 6px;
+  border: 3px solid transparent;
+  border-radius: 7px;
+  background-clip: padding-box;
+  background-color: var(--lz-text3);
+  transform: translateX(-9px);
+}
+.toggle.off .toggle-handle {
+  transform: translateX(9px);
+}
+.toggle.btn-success .toggle-handle {
+  background-color: var(--lz-green);
+}
+.toggle.btn-danger .toggle-handle {
+  background-color: var(--lz-red);
+}
+.toggle.btn-primary .toggle-handle,
+.toggle.btn-info .toggle-handle {
+  background-color: var(--lz-blue);
+}
+.toggle.btn-warning .toggle-handle {
+  background-color: var(--lz-amber);
+}
+
+/* ==========================================================================
+   Fixes after screenshots of the live interface
+   ========================================================================== */
+/* Network: row tint by the time of the last query. Toned down - saturated backgrounds
+   dominated the table content. MUST be in rgb() notation without transparency:
+   the page script mixes these colours and understands only rgb(r, g, b). */
+.network-recent {
+  background-color: rgb(28, 49, 40);
+}
+.network-old {
+  background-color: rgb(45, 42, 34);
+}
+.network-older {
+  background-color: rgb(42, 41, 61);
+}
+.network-never {
+  background-color: rgb(54, 35, 39);
+}
+.network-gradient {
+  background-image: linear-gradient(to right, rgb(28, 49, 40) 0%, rgb(45, 42, 34) 100%);
+}
+/* dates on one line (they broke into three: "2026-11-" / "04" / "20:41:30") */
+#network-entries td:nth-child(4),
+#network-entries td:nth-child(5) {
+  white-space: nowrap;
+}
+
+/* Query Log: expanded query details as a darker panel under the row */
+#all-queries tr.details-row > td,
+table.dataTable tr.details-row > td {
+  padding: 10px 14px;
+  background-color: var(--lz-bg);
+  box-shadow: inset 2px 0 0 var(--lz-border2);
+  font-size: 12px;
+}
+
+/* Lists: long URLs wrapped after a slash or a hyphen, not in the middle of a word */
+.breakall {
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+
+/* Searchable select (select2, e.g. "Known clients"): the text had its own background and
+   was shifted 3 px down, sticking out of the border; the field was also shorter (28 px)
+   than the neighbouring form fields (34 px). */
+.select2-container--default .select2-selection--single {
+  height: 34px;
+  padding: 0; /* AdminLTE sets 6px 12px here - that pushed the text out of the border */
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered,
+.select2 .select2-selection .select2-selection__rendered {
+  height: 32px;
+  margin: 0;
+  padding: 0 30px 0 12px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  color: var(--lz-text);
+  font-family: var(--lz-mono);
+  font-size: 13px;
+  line-height: 32px;
+}
+.select2-container--default .select2-selection--single .select2-selection__placeholder {
+  color: var(--lz-text3);
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+  top: 1px;
+  right: 6px;
+  height: 32px;
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow b {
+  border-top-color: var(--lz-text2);
+}
+.select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
+  border-bottom-color: var(--lz-text2);
+}
+.select2-container--default.select2-container--open .select2-selection--single,
+.select2-container--default.select2-container--focus .select2-selection--single {
+  border-color: var(--lz-green);
+}
+.select2-dropdown {
+  border-color: var(--lz-green);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+.select2-container--default .select2-search--dropdown .select2-search__field {
+  padding: 5px 10px;
+  background: var(--lz-bg2);
+  border: 1px solid var(--lz-border);
+  border-radius: 6px;
+  color: var(--lz-text);
+  font-family: var(--lz-mono);
+  font-size: 13px;
+}
+.select2-container--default .select2-search--dropdown .select2-search__field:focus {
+  outline: 0;
+  border-color: var(--lz-green) !important; /* AdminLTE forces its blue here with !important */
+}
+.select2-container--default .select2-results__option {
+  padding: 7px 12px;
+  font-family: var(--lz-mono);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+.select2-container--default .select2-results__option[aria-selected="true"] {
+  background-color: var(--lz-bg3);
+}
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+  background-color: var(--lz-accent);
+  color: #fff;
+}
+
+/* ==========================================================================
+   Tail log (pihole.log): blocked queries
+   Red text and a full-line highlight - in a fast-scrolling log the red text alone is
+   easy to miss. The pt-log-blocked class is set by the add-on (all kinds of blocks);
+   :has() covers the lines Pi-hole coloured itself, also without the add-on.
+   ========================================================================== */
+#output .log-entry.pt-log-blocked,
+#output .log-entry:has(> strong.log-red) {
+  background: rgba(248, 81, 73, 0.1);
+  box-shadow: inset 3px 0 0 var(--lz-red);
+}
+#output .log-entry.pt-log-blocked > :not(:first-child),
+#output .log-entry > strong.log-red {
+  color: var(--lz-red);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   Fixes after screenshots of the settings pages
+   ========================================================================== */
+/* Table footer with "add" fields and explanations (Conditional forwarding): plain
+   text, not a column header - no uppercase or letter-spacing */
+tfoot.add-new-item > tr > th,
+#revServers-table tfoot th,
+.table > tfoot > tr > th[colspan] {
+  font-size: 12.5px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--lz-text2);
+}
+tfoot input,
+tfoot input::placeholder {
+  letter-spacing: 0;
+  text-transform: none;
+}
+/* Fields without a form class (e.g. numbers in "Rate-limiting") - stock grey.
+   :where() keeps the specificity low so as not to override fields with their own rules. */
+:where(.content-wrapper) input:where([type="number"], [type="text"], [type="password"]):where(:not(.form-control)) {
+  padding: 3px 8px;
+  background: var(--lz-bg);
+  border: 1px solid var(--lz-border);
+  border-radius: 6px;
+  color: var(--lz-text);
+  font-family: var(--lz-mono);
+  font-size: 13px;
+}
+:where(.content-wrapper) input:where([type="number"], [type="text"], [type="password"]):where(:not(.form-control)):focus {
+  outline: 0;
+  border-color: var(--lz-green);
+}
+/* File picker (Teleporter): browser button styled like the theme buttons */
+input[type="file"] {
+  color: var(--lz-text2);
+  font-family: var(--lz-mono);
+  font-size: 12.5px;
+}
+input[type="file"]::file-selector-button {
+  margin-right: 10px;
+  padding: 5px 12px;
+  background: transparent;
+  border: 1px solid var(--lz-border2);
+  border-radius: 6px;
+  color: var(--lz-text2);
+  font-family: var(--lz-mono);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+input[type="file"]::file-selector-button:hover {
+  border-color: var(--lz-green);
+  color: var(--lz-text);
+}
+/* "All settings" tabs: the active one had Bootstrap's stock blue */
+.nav-pills > li > a {
+  background: var(--lz-bg2);
+  border: 1px solid var(--lz-border);
+  border-radius: 6px;
+  color: var(--lz-text2);
+  font-family: var(--lz-mono);
+  font-size: 12px;
+  font-weight: 600;
+}
+.nav-pills > li > a:hover,
+.nav-pills > li > a:focus {
+  background: var(--lz-bg3);
+  border-color: var(--lz-border2);
+  color: var(--lz-text);
+}
+.nav-pills > li.active > a,
+.nav-pills > li.active > a:hover,
+.nav-pills > li.active > a:focus {
+  background: var(--lz-green-dim);
+  border-color: var(--lz-accent);
+  color: var(--lz-green);
+}
+/* "All settings": the box title is the config key name (e.g. dns.cnameDeepInspect) -
+   case matters, so no uppercase, in the data font */
+.box-title[data-key] {
+  font-family: var(--lz-mono);
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--lz-text2);
+}
+/* Settings -> System: values (numbers, versions, addresses) in the data font - Syne has
+   digits of uneven height */
+.table.nowrap > tbody > tr > td {
+  font-family: var(--lz-mono);
+  font-size: 12.5px;
+}
+
+/* ==========================================================================
+   Sidebar: highlight only the entry you are on
+   Pi-hole marks all levels as active at once (Tools > Tail log files >
+   pihole.log). When each gets a fill, three green fields blend into one blob.
+   The fill stays on the deepest active entry; the parents only get green text.
+   ========================================================================== */
+.sidebar-menu > li.active:has(.treeview-menu li.active) > a {
+  background-color: transparent;
+  border-color: transparent;
+  color: var(--lz-green);
+}
+.sidebar-menu > li.active:has(.treeview-menu li.active):hover > a {
+  background-color: var(--lz-bg3);
+  border-color: var(--lz-border);
+}
+.treeview-menu > li.active:has(li.active) > a {
+  background-color: transparent;
+}
+.treeview-menu > li.active:has(li.active) > a:hover {
+  background-color: var(--lz-bg3);
+}
+
+/* Counters in the menu: all with a border in their own colour (some have the label-primary
+   class, some bg-green / bg-red / bg-yellow - only the first had a border) */
+.label.bg-green {
+  border-color: var(--lz-accent) !important;
+}
+.label.bg-red {
+  border-color: rgba(248, 81, 73, 0.4) !important;
+}
+.label.bg-yellow {
+  border-color: rgba(210, 153, 34, 0.4) !important;
+}
+.label.bg-aqua {
+  border-color: rgba(88, 166, 255, 0.35) !important;
+}
+
+/* Tail log: box title. The add-on replaces the command "tail -F /var/log/pihole/pihole.log"
+   with "Tail log" and the file name (the full path stays in the tooltip). */
+.box-title.pt-logtitle > code {
+  display: none;
+}
+.box-title .pt-logname {
+  margin-left: 8px;
+  color: var(--lz-text2);
+  font-family: var(--lz-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* ==========================================================================
+   Dropdowns: all with a green border and the same entry highlight
+   (so far only the searchable list on the Clients page)
+   ========================================================================== */
+.dropdown-menu,
+.daterangepicker {
+  border-color: var(--lz-green);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+.bootstrap-select.open > .dropdown-toggle,
+.btn-group.open > .dropdown-toggle {
+  border-color: var(--lz-green);
+}
+.bootstrap-select .dropdown-menu {
+  background-color: var(--lz-bg);
+  padding: 4px;
+}
+.bootstrap-select .dropdown-menu > li > a,
+.bootstrap-select .dropdown-menu li a {
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-family: var(--lz-mono);
+  font-size: 12.5px;
+}
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus,
+.bootstrap-select .dropdown-menu li a:hover,
+.bootstrap-select .dropdown-menu li a:focus {
+  background-color: var(--lz-accent);
+  color: #fff;
+}
+.bootstrap-select .dropdown-menu li.selected > a,
+.bootstrap-select .dropdown-menu li.selected.active > a {
+  background-color: var(--lz-bg3);
+  color: var(--lz-text);
+}
+.bootstrap-select .dropdown-menu li.selected > a:hover {
+  background-color: var(--lz-accent);
+  color: #fff;
+}
+/* Plain selects (Show 10 entries, domain type, Theme): the browser draws their list
+   itself and it cannot be styled - unless the field switches to base-select mode
+   (Chrome and Edge from version 135). In other browsers the native list stays. */
+@supports (appearance: base-select) {
+  select:not([multiple]):not([size]),
+  select:not([multiple]):not([size])::picker(select) {
+    appearance: base-select;
+  }
+  /* in this mode the field lays out its content as a row: text + arrow. Bootstrap (display:
+     block) and DataTables (inline-block, line-height 30px) pushed the arrow under the field. */
+  select:not([multiple]):not([size]) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+  select.form-control:not([multiple]):not([size]):not(.input-sm) {
+    display: flex;
+  }
+  /* DataTables sets this field with a very specific selector - an equally strong one is needed */
+  div.dataTables_wrapper div.dataTables_length select {
+    display: inline-flex;
+    min-width: 72px;
+  }
+  select:not([multiple]):not([size]):open {
+    border-color: var(--lz-green);
+  }
+  select::picker-icon {
+    color: var(--lz-text2);
+    font-size: 0.8em;
+  }
+  select::picker(select) {
+    margin-top: 4px;
+    padding: 4px;
+    background: var(--lz-bg);
+    border: 1px solid var(--lz-green);
+    border-radius: 6px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    color: var(--lz-text);
+    font-family: var(--lz-mono);
+    font-size: 12.5px;
+  }
+  select option {
+    padding: 6px 10px;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--lz-text);
+  }
+  select option:checked {
+    background: var(--lz-bg3);
+  }
+  select option:hover,
+  select option:focus-visible {
+    background: var(--lz-accent);
+    color: #fff;
+  }
+  select option::checkmark {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Pi-hole versions at the bottom of the sidebar (instead of the footer)
+   The add-on builds .pt-versions from the list Pi-hole fills in the footer, and only
+   then the footer disappears (pt-versions-ready class) - without the add-on the footer stays.
+   ========================================================================== */
+html.pt-versions-ready .main-footer {
+  display: none !important;
+}
+html.pt-versions-ready .main-sidebar,
+html.pt-fixed-height .main-sidebar {
+  display: flex;
+  flex-direction: column;
+}
+/* Fixed sidebar height (set by the add-on): the Status box at the top and the version
+   tiles at the bottom stay put, and when the content does not fit - e.g. expanded Settings -
+   only the menu list scrolls. Not in collapsed mode: there the submenus fly out sideways
+   beyond the sidebar, and a scrolling area would clip them. */
+html.pt-fixed-height .main-sidebar > .sidebar {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  max-height: none !important;
+  overflow: visible !important;
+  padding-bottom: 0;
+}
+html.pt-fixed-height .main-sidebar > .sidebar > .user-panel,
+html.pt-fixed-height .main-sidebar > .sidebar > .pt-versions {
+  flex: none;
+}
+html.pt-fixed-height body:not(.sidebar-collapse) .main-sidebar > .sidebar > .sidebar-menu {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--lz-border2) transparent;
+}
+html.pt-versions-ready .main-sidebar > .sidebar {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  padding-bottom: 0; /* spacing under the tiles gives the version block its margin - the same as on the sides */
+}
+.pt-versions {
+  display: grid;
+  grid-template-columns: repeat(var(--pt-vcols, 3), minmax(0, 1fr));
+  gap: 6px;
+  margin: auto 8px 0; /* auto at the top: the block sticks to the bottom of the sidebar, also when the sidebar is stretched;
+                         8 px sides = the same line as the Status box and the menu entry fields;
+                         bottom spacing gives the card its bottom padding (8 px) */
+  padding-top: 10px;
+  border-top: 1px solid var(--lz-border);
+}
+.sidebar-menu + .pt-versions {
+  margin-top: auto;
+}
+html.pt-versions-ready .sidebar-menu {
+  margin-bottom: 10px;
+}
+.pt-versions > a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  padding: 8px 3px 7px;
+  background: var(--lz-bg);
+  border: 1px solid var(--lz-border);
+  border-radius: var(--lz-radius);
+  color: var(--lz-text2);
+  text-decoration: none;
+}
+.pt-versions > a:hover,
+.pt-versions > a:focus {
+  border-color: var(--lz-green);
+  color: var(--lz-text);
+}
+.pt-versions > a > i {
+  font-size: 14px;
+  color: var(--lz-text3);
+}
+.pt-versions > a > b {
+  max-width: 100%;
+  overflow: hidden;
+  font-family: var(--lz-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* update available */
+.pt-versions > a.pt-update {
+  background: var(--lz-amber-dim);
+  border-color: rgba(210, 153, 34, 0.45);
+}
+.pt-versions > a.pt-update > i,
+.pt-versions > a.pt-update > b {
+  color: var(--lz-amber);
+}
+/* collapsed menu (50 px sidebar): icons only, one under another */
+@media (min-width: 768px) {
+  body.sidebar-collapse .pt-versions {
+    grid-template-columns: minmax(0, 1fr);
+    margin: auto 6px 6px;
+  }
+  body.sidebar-collapse .pt-versions > a {
+    padding: 8px 0;
+  }
+  body.sidebar-collapse .pt-versions > a > b {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Dashboard statistics: one wide box instead of four tiles
+   On the left the percentage of blocked queries (big number and a bar), then three
+   numbers with the name above them. The Pi-hole markup stays (numbers refresh as before);
+   each block is a link as a whole - to where the tile's bottom bar used to lead.
+   ========================================================================== */
+.row:has(> div > .small-box) {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr 1fr 1fr;
+  align-items: center;
+  margin: 0 0 20px;
+  padding: 16px 20px;
+  background: var(--lz-bg2);
+  border: 1px solid var(--lz-border);
+  border-radius: var(--lz-radius);
+}
+/* Bootstrap's clearfix (.row::before/::after) would become grid cells */
+.row:has(> div > .small-box)::before,
+.row:has(> div > .small-box)::after {
+  display: none;
+}
+.row:has(> div > .small-box) > div {
+  float: none;
+  width: auto;
+  min-width: 0;
+  padding: 0 0 0 24px;
+  border-left: 1px solid var(--lz-border);
+}
+.row:has(> div > .small-box) > div:has(#percent_blocked) {
+  order: -1;
+  padding: 0 24px 0 0;
+  border-left: 0;
+}
+.row:has(> div > .small-box) .small-box {
+  position: relative;
+  height: auto;
+  margin: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.row:has(> div > .small-box) .small-box > .inner {
+  display: flex;
+  flex-direction: column-reverse; /* name above the number */
+  padding: 0;
+}
+.row:has(> div > .small-box) .small-box p {
+  height: auto;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  font-size: 10.5px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.row:has(> div > .small-box) .small-box p::before {
+  display: none;
+}
+.row:has(> div > .small-box) .small-box h3 {
+  margin: 0 0 4px;
+  padding: 0;
+  font-size: 20px;
+  line-height: 1.2;
+  text-align: left;
+  color: var(--lz-text);
+}
+.row:has(> div > .small-box) .small-box:hover h3 {
+  color: var(--lz-green);
+}
+/* percentage block: big green number and a bar (width set by the add-on: --pt-blocked) */
+.row:has(> div > .small-box) .small-box:has(#percent_blocked) h3 {
+  font-size: 34px;
+  line-height: 1;
+  color: var(--lz-green);
+  margin-bottom: 6px;
+}
+.row:has(> div > .small-box) .small-box:has(#percent_blocked) p {
+  font-size: 11px;
+}
+.row:has(> div > .small-box) .small-box:has(#percent_blocked) > .inner::before {
+  content: "";
+  display: block;
+  height: 8px;
+  margin-top: 10px;
+  border-radius: 8px;
+  background: linear-gradient(to right, var(--lz-green) var(--pt-blocked, 0%), var(--lz-bg3) var(--pt-blocked, 0%));
+}
+/* tile bottom bar -> invisible link stretched over the whole block */
+.row:has(> div > .small-box) .small-box > .small-box-footer {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  font-size: 0;
+  color: transparent;
+}
+@media (max-width: 991px) {
+  .row:has(> div > .small-box) {
+    grid-template-columns: repeat(3, 1fr); /* percentage over the full width, the three numbers under it */
+    gap: 16px 0;
+  }
+  .row:has(> div > .small-box) > div:has(#percent_blocked) {
+    grid-column: 1 / -1;
+    padding-right: 0;
+  }
+  .row:has(> div > .small-box) > div:nth-child(1) {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+@media (max-width: 575px) {
+  .row:has(> div > .small-box) {
+    grid-template-columns: 1fr;
+  }
+  .row:has(> div > .small-box) > div {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+/* >>> layout:islands
+   ==========================================================================
+   "Islands" layout: header, sidebar and footer as separate, rounded cards
+   with spacing from the edges and from each other (instead of panels glued
+   to the window). Only from 768 px - on phones the sidebar is a slide-out drawer.
+   The cards do NOT clip their content (no overflow: hidden): in collapsed mode
+   the menu flies out beyond the sidebar, and the user list beyond the header.
+   Disable with: sudo pihole-theme layout joined
+   ========================================================================== */
+@media (min-width: 768px) {
+  body,
+  body.layout-boxed {
+    background: var(--isl-backdrop) none;
+  }
+  .wrapper,
+  .layout-boxed .wrapper {
+    background-color: var(--isl-backdrop);
+    box-shadow: none;
+  }
+  .content-wrapper,
+  .right-side,
+  .content-header {
+    background-color: transparent;
+  }
+
+  /* Header: two cards - the logo and the toolbar */
+  .main-header {
+    padding: var(--isl-gap) var(--isl-gap) 0;
+    background: transparent;
+  }
+  .main-header::before,
+  .main-header::after {
+    display: none; /* theme line moved to the toolbar card */
+  }
+  .main-header .logo,
+  .layout-top-nav .main-header > .logo {
+    border-radius: var(--isl-radius);
+    box-shadow: var(--isl-card-shadow);
+  }
+  .main-header .navbar {
+    margin-left: calc(230px + var(--isl-gap));
+    border-radius: var(--isl-radius);
+    box-shadow: var(--isl-card-shadow);
+  }
+  /* theme line: a card-shaped overlay that draws only the strip at the edge */
+  .main-header .navbar::after {
+    content: "";
+    display: block; /* Bootstrap: clearfix with display:table - an absolutely positioned table would have width 0 */
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--isl-stripe) no-repeat;
+    pointer-events: none;
+  }
+  .sidebar-toggle-svg {
+    border-radius: var(--isl-radius) 0 0 var(--isl-radius);
+  }
+  .navbar-nav > .user-menu,
+  .navbar-nav > .user-menu > a {
+    border-radius: 0 var(--isl-radius) var(--isl-radius) 0;
+  }
+
+  /* Sidebar: card under the header; grows together with the expanded menu */
+  .main-sidebar,
+  .left-side {
+    top: calc(50px + 2 * var(--isl-gap));
+    left: var(--isl-gap);
+    padding-top: 0;
+    padding-bottom: 8px;
+    min-height: calc(100% - 50px - 3 * var(--isl-gap));
+    border-radius: var(--isl-radius);
+    box-shadow: var(--isl-card-shadow);
+  }
+
+  /* The menu stays in view while scrolling; the sidebar card still reaches the end of the page.
+     AdminLTE turns .wrapper into a scroll container (overflow-x: hidden, and in "boxed" mode
+     additionally an inline overflow: hidden set by script), which disables position: sticky.
+     "clip" hides the overflow the same way but creates no such container; !important is
+     required here because the inline style beats the stylesheet. */
+  .wrapper,
+  .layout-boxed .wrapper {
+    overflow-x: clip !important;
+    overflow-y: visible !important;
+  }
+  .main-sidebar > .sidebar {
+    position: sticky;
+    top: var(--isl-gap);
+  }
+  /* taller than the window (e.g. expanded Settings) scrolls on its own; in collapsed mode
+     without clipping, because the labels fly out beyond the sidebar */
+  body:not(.sidebar-collapse) .main-sidebar > .sidebar {
+    max-height: calc(100vh - 2 * var(--isl-gap));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+
+  /* Content and footer: aligned with the edges of the header cards */
+  .content-wrapper,
+  .right-side,
+  .main-footer {
+    margin-left: calc(230px + 2 * var(--isl-gap));
+    margin-right: var(--isl-gap);
+  }
+  .content-wrapper > .content {
+    padding: var(--isl-gap) 0 0;
+  }
+  .content-wrapper > .content-header {
+    padding-left: 2px;
+    padding-right: 0;
+  }
+  .main-footer {
+    margin-bottom: var(--isl-gap);
+    border-radius: var(--isl-radius);
+    border: 0;
+    box-shadow: var(--isl-card-shadow);
+  }
+
+  /* Collapsed mode: Pi-hole hides the logo (width 0, but with 2 x 15 px inner padding
+     that would stick out from under the rounded corner of the toolbar) - we hide it completely */
+  .sidebar-mini.sidebar-collapse .main-header .logo {
+    visibility: hidden;
+  }
+  .sidebar-mini.sidebar-collapse .main-header .navbar {
+    margin-left: 0;
+  }
+  .sidebar-mini.sidebar-collapse .content-wrapper,
+  .sidebar-mini.sidebar-collapse .right-side,
+  .sidebar-mini.sidebar-collapse .main-footer {
+    margin-left: calc(50px + 2 * var(--isl-gap)) !important;
+  }
+}
+
+:root {
+  --isl-gap: var(--theme-gap, 12px);
+  --isl-radius: var(--theme-radius, 10px);
+  --isl-backdrop: var(--lz-bg);
+  /* terminal cards: thin border instead of a shadow */
+  --isl-card-shadow: inset 0 0 0 1px var(--lz-border);
+  /* green line at the top edge of the toolbar */
+  --isl-stripe: linear-gradient(var(--lz-green), var(--lz-green)) top / 100% 3px;
+}
+@media (min-width: 768px) {
+  .main-header .navbar,
+  .main-header .logo,
+  .main-sidebar,
+  .left-side,
+  .main-footer {
+    box-shadow: var(--isl-card-shadow);
+  }
+
+  /* --- No top bar (logo + toolbar with the hostname) -------------------------
+     The bar holds the only logout button and the menu toggle, so it disappears
+     only once the add-on has added both as entries at the bottom of the sidebar
+     (pt-tools-ready class on <html>). Without the add-on the bar stays. */
+  html.pt-tools-ready .main-header {
+    display: none;
+  }
+  html.pt-tools-ready .sidebar-menu > li.pt-tools[hidden] {
+    display: list-item;
+  }
+  /* instead of a section header above logout and toggle - a thin separator line */
+  html.pt-tools-ready .sidebar-menu > li.header.pt-tools {
+    height: 1px;
+    margin: 10px 8px 8px; /* 8 px sides: the same line as the Status box and the menu entry fields */
+    padding: 0;
+    font-size: 0;
+    background: var(--lz-border);
+  }
+  /* denser menu: after adding two entries the content has to fit above the bottom
+     edge of the "Query Types" box (measured: 936 px against a target of 929 px) */
+  body:not(.sidebar-collapse) .sidebar-menu > li > a {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .sidebar-collapse .sidebar-menu > li.pt-collapse > a > i {
+    transform: rotate(180deg);
+  }
+
+  /* --- Sidebar: card with content height, pinned to the top of the window ---
+     Height: on the dashboard the add-on aligns the bottom edge of the card with the
+     bottom edge of the box pointed to below; on the other pages the card ends after
+     the last menu entry. float + sticky instead of position: absolute, because an
+     absolute card cannot be pinned. */
+  :root {
+    --pt-sidebar-end: "#queryTypePieChart";
+    --pt-top: 28px; /* gap between the panel and the top edge of the browser window when there is no top bar */
+  }
+  .main-sidebar,
+  .left-side {
+    position: sticky;
+    float: left;
+    top: var(--isl-gap);
+    left: auto;
+    margin: var(--isl-gap) 0 0 var(--isl-gap);
+    min-height: 0;
+  }
+  html.pt-tools-ready .main-sidebar,
+  html.pt-tools-ready .left-side {
+    top: var(--pt-top);
+    margin-top: var(--pt-top);
+  }
+  html.pt-tools-ready .content-wrapper > .content {
+    padding-top: var(--pt-top);
+  }
+  .main-sidebar > .sidebar {
+    position: static; /* the whole card is pinned, not its content */
+  }
+  body:not(.sidebar-collapse) .main-sidebar > .sidebar {
+    max-height: calc(100vh - 2 * var(--isl-gap) - 8px);
+  }
+  html.pt-tools-ready body:not(.sidebar-collapse) .main-sidebar > .sidebar {
+    max-height: calc(100vh - var(--pt-top) - var(--isl-gap) - 8px);
+  }
+  /* --- Content area has content height ---------------------------------------
+     (the footer with the versions is hidden when the add-on has moved the versions to
+     the bottom of the sidebar; without the add-on it sits directly under the content)
+     AdminLTE forces the content area to be at least the window height (CSS min-height
+     100% + an inline style set by script), so on short pages the footer landed at the
+     bottom of the window, far from the content, and on long pages it followed right
+     behind it. !important, because the inline style beats the stylesheet. */
+  .content-wrapper,
+  .right-side {
+    min-height: 0 !important;
+  }
+  .content-wrapper > .content {
+    min-height: 0;
+  }
+  /* elements ending the page without their own margin (Update Gravity, Search Lists):
+     the same 20 px spacing as under the boxes */
+  #gravityBtn,
+  .content pre#output {
+    margin-bottom: 20px;
+  }
+
+  /* Content and footer as separate formatting contexts: their inner clearfixes
+     (.row::after { clear: both }) must not "clear" the floated sidebar, because
+     they would push the following rows below its bottom edge */
+  .content-wrapper,
+  .right-side,
+  .main-footer {
+    display: flow-root;
+  }
+}
+/* <<< layout:islands */
