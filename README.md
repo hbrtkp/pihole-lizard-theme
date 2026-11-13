@@ -1,12 +1,11 @@
 # pihole-lizard-theme
 
-![Pi-hole dashboard with the Lizard theme](screenshots/lizard-login.jpg)****
-![Pi-hole dashboard with the Lizard theme](screenshots/lizard-theme.jpg)****
-
 A dark theme for the Pi-hole v6 web interface in the style of the *TheLizardWizard* guide
 (Syne + JetBrains Mono), with an installer that survives Pi-hole updates.
 
 **Version:** 1.0.0 · **Tested with:** pi-hole/web `master`, commit `fb699c4` (2026-10-17), Chart.js 4.5.1
+
+![Pi-hole dashboard with the Lizard theme](lizard-theme.jpg)
 
 ## What the theme does
 
