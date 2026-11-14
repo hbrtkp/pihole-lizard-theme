@@ -1,5 +1,16 @@
 # pihole-lizard-theme — changelog
 
+## 1.1.0 — 2026-11-14
+
+- Sidebar: when an expanded submenu (Settings, Tools) needs more room than the common
+  sidebar height, the sidebar grows to fit it instead of scrolling the menu list; it shrinks
+  back when the submenu is closed.
+- Four-digit counters (dashboard and the sidebar badges) get the same digit grouping as
+  larger numbers. In some languages (Polish among them) the browser groups digits only from
+  five digits up, so "3962" stood next to "27 715"; the add-on inserts the separator the
+  browser itself uses.
+- Removed an unused `.not-used` rule left over from the stock theme.
+
 ## 1.0.0 — 2026-11-13
 
 First public release.

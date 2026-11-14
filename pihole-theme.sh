@@ -27,7 +27,7 @@
 # ============================================================================
 set -u
 
-VERSION="1.0.0"
+VERSION="1.1.0"
 TESTED_WEB="pi-hole/web master, commit fb699c4 (2026-10-17), Chart.js 4.5.1"
 MARKER="pihole-theme"
 STORE="${STORE:-/opt/pihole-theme}"

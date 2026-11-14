@@ -1258,12 +1258,6 @@ body.login-page.layout-boxed,
   border-radius: var(--lz-radius-lg);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
-.not-used {
-  background-color: var(--lz-bg3);
-}
-.not-used:hover {
-  background-color: var(--lz-border);
-}
 .used {
   background-color: var(--lz-bg2);
 }
@@ -2411,9 +2405,10 @@ html.pt-fixed-height .main-sidebar {
   flex-direction: column;
 }
 /* Fixed sidebar height (set by the add-on): the Status box at the top and the version
-   tiles at the bottom stay put, and when the content does not fit - e.g. expanded Settings -
-   only the menu list scrolls. Not in collapsed mode: there the submenus fly out sideways
-   beyond the sidebar, and a scrolling area would clip them. */
+   tiles at the bottom stay put. When an expanded submenu needs more room, the add-on grows
+   the sidebar to fit, so the menu list normally does not scroll; the scrolling below only
+   covers the frames of the slide animation. Not in collapsed mode: there the submenus fly
+   out sideways beyond the sidebar, and a scrolling area would clip them. */
 html.pt-fixed-height .main-sidebar > .sidebar {
   display: flex;
   flex: 1 1 auto;

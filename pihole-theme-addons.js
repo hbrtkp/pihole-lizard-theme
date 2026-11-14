@@ -9,6 +9,7 @@
      7. Pi-hole versions at the bottom of the sidebar (instead of the footer)
      8. Tail log: readable box title instead of the tail -F command
      9. Dashboard: blocked-percentage bar and link tooltips in the statistics box
+    10. Digit grouping for four-digit counters (dashboard and sidebar)
    Loaded by one line added to scripts/lua/footer.lp right after footer.js
    (done by pihole-theme.sh; a Pi-hole update removes it, cron restores it).
    The file runs BEFORE the charts are created (they are built only after the
@@ -485,15 +486,16 @@
     return wrapper.getBoundingClientRect().top + headerH + parseFloat(getComputedStyle(sidebar).marginTop || 0);
   }
 
-  // Fixed sidebar height - the same on every page and regardless of expanded submenus.
+  // Sidebar height - the same on every page:
   //  - the dashboard is the reference: sidebar bottom edge level with the box pointed to by
   //    --pt-sidebar-end (Query Types). The height measured there is remembered
   //    in the browser (localStorage) and used on the other pages;
   //  - the sidebar is never taller than the window (otherwise the version tiles at the
   //    bottom would be invisible) - then it has the window height, on the dashboard too;
-  //  - until something is remembered (first visit skipping the dashboard): window height.
-  // When the content does not fit (expanded Settings / Tools), only the menu list
-  // scrolls - the CSS sets that up for the pt-fixed-height class.
+  //  - until something is remembered (first visit skipping the dashboard): window height;
+  //  - exception: when the menu needs more room (expanded Settings / Tools), the sidebar
+  //    grows to fit its content, so nothing has to be scrolled; it shrinks back to the
+  //    common height when the submenu is closed.
   var STORE_KEY = "pt-sidebar-height";
 
   function bucket() {
@@ -539,7 +541,11 @@
       wanted = recall();
     }
     var height = Math.max(200, wanted ? Math.min(wanted, available) : available);
-    sidebar.style.height = height + "px";
+    // natural height of the content (status panel + menu + version tiles): measured with the
+    // height unset; an expanded submenu makes it larger than the common height
+    sidebar.style.height = "";
+    var natural = Math.ceil(sidebar.getBoundingClientRect().height);
+    sidebar.style.height = Math.max(height, natural) + "px";
     root.classList.add("pt-fixed-height");
   }
 
@@ -553,6 +559,10 @@
   if (window.ResizeObserver) {
     var content = document.querySelector(".content-wrapper");
     if (content) new ResizeObserver(alignAll).observe(content);
+    // submenus change size while they slide open or closed (the menu list itself does not:
+    // its size is bound by the sidebar height)
+    var sub = new ResizeObserver(alignAll);
+    Array.prototype.forEach.call(sidebar.querySelectorAll(".treeview-menu"), function (ul) { sub.observe(ul); });
   }
 })();
 
@@ -724,4 +734,38 @@
   new MutationObserver(bar).observe(pct, { childList: true, characterData: true, subtree: true });
   var clients = document.getElementById("active_clients");
   if (clients) new MutationObserver(tips).observe(clients, { childList: true, characterData: true, subtree: true });
+})();
+
+/* --------------------------------------------------------------------------
+   10. Digit grouping for four-digit counters (dashboard and sidebar)
+       Pi-hole formats the counters with Intl.NumberFormat(). In some languages
+       (Polish among them) the locale rules group digits only from five digits
+       up, so "3962" stands next to "27 715". The add-on inserts the same
+       separator the browser uses for larger numbers, so every counter is
+       grouped the same way. Only plain integers of four or more digits are
+       touched; the percentage and already formatted values are left alone.
+   -------------------------------------------------------------------------- */
+(function () {
+  "use strict";
+
+  // dashboard counters and the badges in the sidebar menu (Groups, Clients, Domains, Lists)
+  var ids = ["dns_queries", "blocked_queries", "gravity_size", "active_clients",
+    "num_groups", "num_clients", "num_allowed", "num_denied", "num_lists", "num_gravity"];
+  var els = ids.map(function (id) { return document.getElementById(id); }).filter(Boolean);
+  if (!els.length) return;
+
+  // the separator the browser puts into a seven-digit number in the page language
+  var probe = new Intl.NumberFormat().format(1234567);
+  var m = /^1(\D+)234(?:\1)567$/.exec(probe); // (?:) keeps "\1567" from being read as an octal escape
+  var sep = m ? m[1] : (probe === "1234567" ? "\u00a0" : null);
+  if (!sep) return; // unknown format - leave Pi-hole's output as it is
+
+  function fix(el) {
+    var t = el.textContent;
+    if (/^\d{4,}$/.test(t)) el.textContent = t.replace(/\B(?=(\d{3})+(?!\d))/g, sep);
+  }
+  els.forEach(function (el) {
+    fix(el);
+    new MutationObserver(function () { fix(el); }).observe(el, { childList: true, characterData: true, subtree: true });
+  });
 })();
