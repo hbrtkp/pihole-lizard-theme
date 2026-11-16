@@ -2,13 +2,14 @@
 
 ## 1.2.0 — 2026-11-16
 
-- Dark / Light switch at the bottom of the sidebar, in the space between "Log out" and the
-  version tiles. The choice is kept per browser and applied before the page is painted
+- Dark / Light switch at the bottom of the sidebar: two icon buttons (moon / sun) in the
+  space between "Log out" and the version tiles. The choice is kept per browser and applied before the page is painted
   (the installer adds a one-line script to header.lp), so a light page does not flash dark.
 - Five light palettes: paper (default), sand, mint, slate, contrast — chosen on the Pi with
   `sudo pihole-theme set light <name>`; `status` shows it, `doctor` checks the header hook.
 - Light palettes adapt shadows, tooltips, table tints, Network row colours and the chart
-  palette; every label meets a 4.5 : 1 contrast ratio.
+  palette. Audited on eight pages: every text meets a 4.5 : 1 contrast ratio (3 : 1 for
+  icons, chart colours and large numbers).
 
 ## 1.1.0 — 2026-11-14
 

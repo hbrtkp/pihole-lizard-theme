@@ -810,8 +810,7 @@
 
   var box = document.createElement("div");
   box.className = "pt-scheme";
-  var seg = document.createElement("div");
-  seg.className = "seg";
+  var seg = box; // two icon buttons straight in the container (labels are for screen readers)
   [["dark", "fa-moon", "Dark"], ["light", "fa-sun", "Light"]].forEach(function (d) {
     var b = document.createElement("button");
     b.type = "button";
@@ -832,7 +831,6 @@
     });
     seg.appendChild(b);
   });
-  box.appendChild(seg);
   var versions = side.querySelector(".pt-versions");
   if (versions) side.insertBefore(box, versions); else side.appendChild(box);
 })();

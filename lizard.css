@@ -2645,23 +2645,23 @@ html[data-lz-scheme="paper"] {
   --lz-text: #1f2328;
   --lz-text2: #4d5663;
   --lz-text3: #5a6470;
-  --lz-green: var(--theme-accent, #1a7f37);
+  --lz-green: var(--theme-accent, #197b35);
   --lz-green-dim: var(--theme-accent-shade, #dafbe1);
-  --lz-green-bright: var(--theme-accent-bright, #2da44e);
-  --lz-accent: var(--theme-accent-dark, #116329);
-  --lz-blue: #0969da;
+  --lz-green-bright: var(--theme-accent-bright, #197b35);
+  --lz-accent: var(--theme-accent-dark, #146a2e);
+  --lz-blue: #0960c7;
   --lz-blue-dim: #ddf4ff;
-  --lz-amber: #9a6700;
+  --lz-amber: #916100;
   --lz-amber-dim: #fff8c5;
-  --lz-red: #cf222e;
+  --lz-red: #c3202c;
   --lz-red-dim: #ffebe9;
   --lz-purple: #8250df;
   --lz-purple-dim: #fbefff;
-  --allowed-color: #1a7f37;
-  --blocked-color: #cf222e;
-  --cached-color: #0969da;
+  --allowed-color: #197b35;
+  --blocked-color: #c3202c;
+  --cached-color: #0960c7;
   --other-color: #6e7781;
-  --chart-palette: #1a7f37, #0969da, #8250df, #9a6700, #cf222e, #1b7c83, #bf3989, #5a6470, #2da44e, #218bff, #a475f9, #d4a72c, #ff8182, #3192aa, #ff9492, #6e7781;
+  --chart-palette: #197b35, #0960c7, #8250df, #916100, #c3202c, #0e6b72, #a32a76, #5a6470, #146a2e, #218bff, #a475f9, #ac8725, #db6e6f, #3192aa, #bf5f5d, #6e7781;
   --lz-net-recent: #dff3e4;
   --lz-net-old: #f6ecd2;
   --lz-net-older: #e7e5f3;
@@ -2676,23 +2676,23 @@ html[data-lz-scheme="sand"] {
   --lz-text: #2a241b;
   --lz-text2: #5c5244;
   --lz-text3: #6a6052;
-  --lz-green: var(--theme-accent, #3a7d44);
+  --lz-green: var(--theme-accent, #34713e);
   --lz-green-dim: var(--theme-accent-shade, #e1efdc);
-  --lz-green-bright: var(--theme-accent-bright, #4c9a57);
-  --lz-accent: var(--theme-accent-dark, #2c5f34);
-  --lz-blue: #2f6fb3;
+  --lz-green-bright: var(--theme-accent-bright, #34713e);
+  --lz-accent: var(--theme-accent-dark, #2d6234);
+  --lz-blue: #2c66a4;
   --lz-blue-dim: #e2eefb;
-  --lz-amber: #9a6700;
+  --lz-amber: #8d5e00;
   --lz-amber-dim: #f8edcb;
-  --lz-red: #c43d2f;
+  --lz-red: #b03628;
   --lz-red-dim: #f9e5e2;
   --lz-purple: #7a56c9;
   --lz-purple-dim: #f1ebfb;
-  --allowed-color: #3a7d44;
-  --blocked-color: #c43d2f;
-  --cached-color: #2f6fb3;
+  --allowed-color: #34713e;
+  --blocked-color: #b03628;
+  --cached-color: #2c66a4;
   --other-color: #7d7262;
-  --chart-palette: #3a7d44, #2f6fb3, #7a56c9, #9a6700, #c43d2f, #1b7c83, #bf3989, #6a6052, #4c9a57, #218bff, #a475f9, #d4a72c, #ff8182, #3192aa, #ff9492, #7d7262;
+  --chart-palette: #34713e, #2c66a4, #7a56c9, #8d5e00, #b03628, #0e6b72, #a32a76, #6a6052, #2d6234, #2087f7, #9a6eeb, #a78324, #ce6869, #3192aa, #c2716f, #7d7262;
   --lz-net-recent: #e3eedd;
   --lz-net-old: #f5e9cc;
   --lz-net-older: #eae5f2;
@@ -2707,23 +2707,23 @@ html[data-lz-scheme="mint"] {
   --lz-text: #15291c;
   --lz-text2: #3f5a48;
   --lz-text3: #4f6a58;
-  --lz-green: var(--theme-accent, #1f8a3b);
+  --lz-green: var(--theme-accent, #1a7631);
   --lz-green-dim: var(--theme-accent-shade, #d2efd9);
-  --lz-green-bright: var(--theme-accent-bright, #2fa64b);
-  --lz-accent: var(--theme-accent-dark, #15632b);
-  --lz-blue: #0969da;
+  --lz-green-bright: var(--theme-accent-bright, #1a7631);
+  --lz-accent: var(--theme-accent-dark, #13602a);
+  --lz-blue: #0960c7;
   --lz-blue-dim: #ddf1fa;
-  --lz-amber: #9a6700;
+  --lz-amber: #8d5e00;
   --lz-amber-dim: #fcf3cf;
-  --lz-red: #cf222e;
+  --lz-red: #c3202c;
   --lz-red-dim: #fbe7e5;
-  --lz-purple: #8250df;
+  --lz-purple: #7e4ed8;
   --lz-purple-dim: #f3eefb;
-  --allowed-color: #1f8a3b;
-  --blocked-color: #cf222e;
-  --cached-color: #0969da;
+  --allowed-color: #1a7631;
+  --blocked-color: #c3202c;
+  --cached-color: #0960c7;
   --other-color: #6e7781;
-  --chart-palette: #1f8a3b, #0969da, #8250df, #9a6700, #cf222e, #1b7c83, #bf3989, #4f6a58, #2fa64b, #218bff, #a475f9, #d4a72c, #ff8182, #3192aa, #ff9492, #6e7781;
+  --chart-palette: #1a7631, #0960c7, #7e4ed8, #8d5e00, #c3202c, #0e6b72, #a32a76, #4f6a58, #13602a, #218bff, #9f71f2, #ac8725, #d46b6c, #3192aa, #bf5f5d, #6e7781;
   --lz-net-recent: #d8efdf;
   --lz-net-old: #f3ead0;
   --lz-net-older: #e5e6f1;
@@ -2738,23 +2738,23 @@ html[data-lz-scheme="slate"] {
   --lz-text: #1b2432;
   --lz-text2: #4b5869;
   --lz-text3: #596676;
-  --lz-green: var(--theme-accent, #1e7f45);
+  --lz-green: var(--theme-accent, #1b733f);
   --lz-green-dim: var(--theme-accent-shade, #d9f0e2);
-  --lz-green-bright: var(--theme-accent-bright, #2a9a57);
-  --lz-accent: var(--theme-accent-dark, #155c33);
+  --lz-green-bright: var(--theme-accent-bright, #1b733f);
+  --lz-accent: var(--theme-accent-dark, #166435);
   --lz-blue: #0b63c9;
   --lz-blue-dim: #dfeaf8;
-  --lz-amber: #9a6700;
+  --lz-amber: #8d5e00;
   --lz-amber-dim: #f9f0d2;
-  --lz-red: #cf222e;
+  --lz-red: #c3202c;
   --lz-red-dim: #fae6e6;
-  --lz-purple: #7d56d6;
+  --lz-purple: #7953d0;
   --lz-purple-dim: #efeafb;
-  --allowed-color: #1e7f45;
-  --blocked-color: #cf222e;
+  --allowed-color: #1b733f;
+  --blocked-color: #c3202c;
   --cached-color: #0b63c9;
   --other-color: #6b7684;
-  --chart-palette: #1e7f45, #0b63c9, #7d56d6, #9a6700, #cf222e, #1b7c83, #bf3989, #596676, #2a9a57, #218bff, #a475f9, #d4a72c, #ff8182, #3192aa, #ff9492, #6b7684;
+  --chart-palette: #1b733f, #0b63c9, #7953d0, #8d5e00, #c3202c, #0e6b72, #a32a76, #596676, #166435, #2087f7, #9f71f2, #a78324, #d46b6c, #3192aa, #c2716f, #6b7684;
   --lz-net-recent: #ddefe3;
   --lz-net-old: #f3ead3;
   --lz-net-older: #e4e5f4;
@@ -2771,8 +2771,8 @@ html[data-lz-scheme="contrast"] {
   --lz-text3: #444444;
   --lz-green: var(--theme-accent, #0f7a2c);
   --lz-green-dim: var(--theme-accent-shade, #d7f1dd);
-  --lz-green-bright: var(--theme-accent-bright, #169a3a);
-  --lz-accent: var(--theme-accent-dark, #0a5720);
+  --lz-green-bright: var(--theme-accent-bright, #0f7a2c);
+  --lz-accent: var(--theme-accent-dark, #0f6325);
   --lz-blue: #0b55c4;
   --lz-blue-dim: #dde9fb;
   --lz-amber: #8a5a00;
@@ -2785,7 +2785,7 @@ html[data-lz-scheme="contrast"] {
   --blocked-color: #c00000;
   --cached-color: #0b55c4;
   --other-color: #555555;
-  --chart-palette: #0f7a2c, #0b55c4, #6f3fd1, #8a5a00, #c00000, #1b7c83, #bf3989, #444444, #169a3a, #218bff, #a475f9, #d4a72c, #ff8182, #3192aa, #ff9492, #555555;
+  --chart-palette: #0f7a2c, #0b55c4, #6f3fd1, #8a5a00, #c00000, #0e6b72, #a32a76, #444444, #0f6325, #218bff, #a475f9, #b68f27, #e27172, #3192aa, #d47c7a, #555555;
   --lz-net-recent: #d9f2df;
   --lz-net-old: #f5e9c9;
   --lz-net-older: #e4e3f4;
@@ -2895,47 +2895,40 @@ html[data-lz-light] .pt-versions > a.pt-update > b {
 
 /* ==========================================================================
    Dark / Light switch at the bottom of the sidebar (built by the add-on)
-   Sits in the free space between "Log out" and the version tiles; the 10 px gap
-   keeps its focus ring off the tiles. The chosen scheme is stored per browser.
+   Two icon buttons (moon / sun) side by side, in the free space between
+   "Log out" and the version tiles; the inset focus ring keeps off the tiles.
+   The chosen scheme is stored per browser.
    ========================================================================== */
 .pt-scheme {
   display: flex;
   flex: none;
+  gap: 6px;
   margin: auto 8px 0;
   padding-top: 7px;
   border-top: 1px solid var(--lz-border);
 }
 .pt-scheme + .pt-versions {
-  margin-top: 7px; /* the inset focus ring of the switch never reaches the tiles */
+  margin-top: 7px;
   padding-top: 0;
   border-top: 0;
-}
-.pt-scheme > .seg {
-  display: flex;
-  width: 100%;
-  overflow: hidden;
-  background: var(--lz-bg);
-  border: 1px solid var(--lz-border);
-  border-radius: var(--lz-radius);
 }
 .pt-scheme button {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
-  padding: 4px 4px;
+  height: 28px;
   margin: 0;
-  background: transparent;
-  border: 0;
+  padding: 0;
+  background: var(--lz-bg);
+  border: 1px solid var(--lz-border);
+  border-radius: var(--lz-radius);
   color: var(--lz-text3);
-  font-family: var(--lz-mono);
-  font-size: 11px;
-  line-height: 18px;
-  font-weight: 600;
+  font-size: 14px;
   cursor: pointer;
 }
 .pt-scheme button:hover {
+  border-color: var(--lz-green);
   color: var(--lz-text);
 }
 .pt-scheme button:focus-visible {
@@ -2944,17 +2937,20 @@ html[data-lz-light] .pt-versions > a.pt-update > b {
 }
 .pt-scheme button.on {
   background: var(--lz-green-dim);
+  border-color: var(--lz-accent);
   color: var(--lz-green);
+}
+.pt-scheme button > span {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
 }
 @media (min-width: 768px) {
   body.sidebar-collapse .pt-scheme {
-    margin: auto 6px 0;
-  }
-  body.sidebar-collapse .pt-scheme > .seg {
     flex-direction: column;
-  }
-  body.sidebar-collapse .pt-scheme button > span {
-    display: none;
+    margin: auto 6px 0;
   }
 }
 
