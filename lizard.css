@@ -1,6 +1,5 @@
 /* ==========================================================================
    pihole-theme :: "lizard" theme for Pi-hole v6 (DARK)
-   Style source: the "TheLizardWizard — Raspberry Pi Security Hardening Guide"
    Leitmotif: the terminal block (header bar with a green dot and an uppercase
    label), statistics cards with the value in JetBrains Mono, pills,
    info/warn/success frames with a dimmed background, green accent.
@@ -2629,6 +2628,336 @@ html.pt-versions-ready .sidebar-menu {
   }
 }
 
+/* ==========================================================================
+   Light colour schemes
+   The add-on sets data-lz-scheme="<name>" (and data-lz-light) on <html> when the
+   Dark / Light switch in the sidebar is on "Light"; the palette name comes from
+   --pt-light (pihole-theme set light <name>, default "paper"). Each palette
+   overrides the colour variables only; the rules below adapt the few colours
+   that the dark theme writes directly (shadows, tooltips, table tints).
+   ========================================================================== */
+html[data-lz-scheme="paper"] {
+  --lz-bg: #f6f8fa;
+  --lz-bg2: #ffffff;
+  --lz-bg3: #eaeef2;
+  --lz-border: #d0d7de;
+  --lz-border2: #b6bfc9;
+  --lz-text: #1f2328;
+  --lz-text2: #4d5663;
+  --lz-text3: #5a6470;
+  --lz-green: var(--theme-accent, #1a7f37);
+  --lz-green-dim: var(--theme-accent-shade, #dafbe1);
+  --lz-green-bright: var(--theme-accent-bright, #2da44e);
+  --lz-accent: var(--theme-accent-dark, #116329);
+  --lz-blue: #0969da;
+  --lz-blue-dim: #ddf4ff;
+  --lz-amber: #9a6700;
+  --lz-amber-dim: #fff8c5;
+  --lz-red: #cf222e;
+  --lz-red-dim: #ffebe9;
+  --lz-purple: #8250df;
+  --lz-purple-dim: #fbefff;
+  --allowed-color: #1a7f37;
+  --blocked-color: #cf222e;
+  --cached-color: #0969da;
+  --other-color: #6e7781;
+  --chart-palette: #1a7f37, #0969da, #8250df, #9a6700, #cf222e, #1b7c83, #bf3989, #5a6470, #2da44e, #218bff, #a475f9, #d4a72c, #ff8182, #3192aa, #ff9492, #6e7781;
+  --lz-net-recent: #dff3e4;
+  --lz-net-old: #f6ecd2;
+  --lz-net-older: #e7e5f3;
+  --lz-net-never: #f8dede;
+}
+html[data-lz-scheme="sand"] {
+  --lz-bg: #f4efe6;
+  --lz-bg2: #fdfaf4;
+  --lz-bg3: #ebe3d4;
+  --lz-border: #d8cdb8;
+  --lz-border2: #bfb29a;
+  --lz-text: #2a241b;
+  --lz-text2: #5c5244;
+  --lz-text3: #6a6052;
+  --lz-green: var(--theme-accent, #3a7d44);
+  --lz-green-dim: var(--theme-accent-shade, #e1efdc);
+  --lz-green-bright: var(--theme-accent-bright, #4c9a57);
+  --lz-accent: var(--theme-accent-dark, #2c5f34);
+  --lz-blue: #2f6fb3;
+  --lz-blue-dim: #e2eefb;
+  --lz-amber: #9a6700;
+  --lz-amber-dim: #f8edcb;
+  --lz-red: #c43d2f;
+  --lz-red-dim: #f9e5e2;
+  --lz-purple: #7a56c9;
+  --lz-purple-dim: #f1ebfb;
+  --allowed-color: #3a7d44;
+  --blocked-color: #c43d2f;
+  --cached-color: #2f6fb3;
+  --other-color: #7d7262;
+  --chart-palette: #3a7d44, #2f6fb3, #7a56c9, #9a6700, #c43d2f, #1b7c83, #bf3989, #6a6052, #4c9a57, #218bff, #a475f9, #d4a72c, #ff8182, #3192aa, #ff9492, #7d7262;
+  --lz-net-recent: #e3eedd;
+  --lz-net-old: #f5e9cc;
+  --lz-net-older: #eae5f2;
+  --lz-net-never: #f7dfd9;
+}
+html[data-lz-scheme="mint"] {
+  --lz-bg: #edf5ef;
+  --lz-bg2: #ffffff;
+  --lz-bg3: #dfeee4;
+  --lz-border: #bfd9c7;
+  --lz-border2: #99c2a7;
+  --lz-text: #15291c;
+  --lz-text2: #3f5a48;
+  --lz-text3: #4f6a58;
+  --lz-green: var(--theme-accent, #1f8a3b);
+  --lz-green-dim: var(--theme-accent-shade, #d2efd9);
+  --lz-green-bright: var(--theme-accent-bright, #2fa64b);
+  --lz-accent: var(--theme-accent-dark, #15632b);
+  --lz-blue: #0969da;
+  --lz-blue-dim: #ddf1fa;
+  --lz-amber: #9a6700;
+  --lz-amber-dim: #fcf3cf;
+  --lz-red: #cf222e;
+  --lz-red-dim: #fbe7e5;
+  --lz-purple: #8250df;
+  --lz-purple-dim: #f3eefb;
+  --allowed-color: #1f8a3b;
+  --blocked-color: #cf222e;
+  --cached-color: #0969da;
+  --other-color: #6e7781;
+  --chart-palette: #1f8a3b, #0969da, #8250df, #9a6700, #cf222e, #1b7c83, #bf3989, #4f6a58, #2fa64b, #218bff, #a475f9, #d4a72c, #ff8182, #3192aa, #ff9492, #6e7781;
+  --lz-net-recent: #d8efdf;
+  --lz-net-old: #f3ead0;
+  --lz-net-older: #e5e6f1;
+  --lz-net-never: #f6dddc;
+}
+html[data-lz-scheme="slate"] {
+  --lz-bg: #eef1f6;
+  --lz-bg2: #f9fafc;
+  --lz-bg3: #e2e7ef;
+  --lz-border: #c8d1dc;
+  --lz-border2: #a9b4c2;
+  --lz-text: #1b2432;
+  --lz-text2: #4b5869;
+  --lz-text3: #596676;
+  --lz-green: var(--theme-accent, #1e7f45);
+  --lz-green-dim: var(--theme-accent-shade, #d9f0e2);
+  --lz-green-bright: var(--theme-accent-bright, #2a9a57);
+  --lz-accent: var(--theme-accent-dark, #155c33);
+  --lz-blue: #0b63c9;
+  --lz-blue-dim: #dfeaf8;
+  --lz-amber: #9a6700;
+  --lz-amber-dim: #f9f0d2;
+  --lz-red: #cf222e;
+  --lz-red-dim: #fae6e6;
+  --lz-purple: #7d56d6;
+  --lz-purple-dim: #efeafb;
+  --allowed-color: #1e7f45;
+  --blocked-color: #cf222e;
+  --cached-color: #0b63c9;
+  --other-color: #6b7684;
+  --chart-palette: #1e7f45, #0b63c9, #7d56d6, #9a6700, #cf222e, #1b7c83, #bf3989, #596676, #2a9a57, #218bff, #a475f9, #d4a72c, #ff8182, #3192aa, #ff9492, #6b7684;
+  --lz-net-recent: #ddefe3;
+  --lz-net-old: #f3ead3;
+  --lz-net-older: #e4e5f4;
+  --lz-net-never: #f6dfe0;
+}
+html[data-lz-scheme="contrast"] {
+  --lz-bg: #ffffff;
+  --lz-bg2: #ffffff;
+  --lz-bg3: #f0f0f0;
+  --lz-border: #b8b8b8;
+  --lz-border2: #8f8f8f;
+  --lz-text: #000000;
+  --lz-text2: #333333;
+  --lz-text3: #444444;
+  --lz-green: var(--theme-accent, #0f7a2c);
+  --lz-green-dim: var(--theme-accent-shade, #d7f1dd);
+  --lz-green-bright: var(--theme-accent-bright, #169a3a);
+  --lz-accent: var(--theme-accent-dark, #0a5720);
+  --lz-blue: #0b55c4;
+  --lz-blue-dim: #dde9fb;
+  --lz-amber: #8a5a00;
+  --lz-amber-dim: #fbf0c6;
+  --lz-red: #c00000;
+  --lz-red-dim: #fbe1e1;
+  --lz-purple: #6f3fd1;
+  --lz-purple-dim: #efe8fb;
+  --allowed-color: #0f7a2c;
+  --blocked-color: #c00000;
+  --cached-color: #0b55c4;
+  --other-color: #555555;
+  --chart-palette: #0f7a2c, #0b55c4, #6f3fd1, #8a5a00, #c00000, #1b7c83, #bf3989, #444444, #169a3a, #218bff, #a475f9, #d4a72c, #ff8182, #3192aa, #ff9492, #555555;
+  --lz-net-recent: #d9f2df;
+  --lz-net-old: #f5e9c9;
+  --lz-net-older: #e4e3f4;
+  --lz-net-never: #f8d9d9;
+}
+
+/* shared adjustments for every light palette */
+html[data-lz-light] {
+  color-scheme: light;
+  --datatable-bgcolor: var(--lz-blue-dim);
+  --overlay-bgcolor: rgba(255, 255, 255, 0.72);
+  --lz-shadow: rgba(27, 31, 36, 0.14);
+  --lz-shadow-lg: rgba(27, 31, 36, 0.2);
+}
+html[data-lz-light] body.layout-boxed,
+html[data-lz-light] .modal-backdrop {
+  background: var(--lz-bg) none;
+}
+html[data-lz-light] a:focus,
+html[data-lz-light] a:active,
+html[data-lz-light] .navbar-nav > .user-menu > .dropdown-menu > .user-footer a:hover {
+  color: var(--lz-accent) !important;
+}
+html[data-lz-light] .table > tbody > tr.odd,
+html[data-lz-light] .table > tfoot > tr.odd,
+html[data-lz-light] .table > thead > tr.odd {
+  background-color: rgba(0, 0, 0, 0.025);
+}
+html[data-lz-light] .form-control:focus,
+html[data-lz-light] .dataTable tfoot input:focus,
+html[data-lz-light] table.table tfoot input[type="text"]:focus {
+  box-shadow: 0 0 0 3px var(--lz-green-dim);
+}
+html[data-lz-light] .dropdown-menu,
+html[data-lz-light] .daterangepicker,
+html[data-lz-light] .select2-dropdown,
+html[data-lz-light] .popover,
+html[data-lz-light] .bootstrap-select .dropdown-menu {
+  box-shadow: 0 8px 24px var(--lz-shadow);
+}
+html[data-lz-light] .login-box,
+html[data-lz-light] .modal-content {
+  box-shadow: 0 16px 48px var(--lz-shadow-lg);
+}
+html[data-lz-light] .tooltip-inner,
+html[data-lz-light] .chartjs-tooltip {
+  background: var(--lz-bg2);
+  color: var(--lz-text);
+  border: 1px solid var(--lz-border2);
+  box-shadow: 0 10px 28px var(--lz-shadow);
+}
+html[data-lz-light] .chartjs-tooltip.bottom .arrow {
+  border-top-color: var(--lz-bg2);
+}
+html[data-lz-light] .chartjs-tooltip.top .arrow {
+  border-bottom-color: var(--lz-bg2);
+}
+html[data-lz-light] .chartjs-tooltip.right.center .arrow {
+  border-left-color: var(--lz-bg2);
+}
+html[data-lz-light] .chartjs-tooltip.left.center .arrow {
+  border-right-color: var(--lz-bg2);
+}
+html[data-lz-light] .text-danger,
+html[data-lz-light] .error-headline.text-danger,
+html[data-lz-light] .has-error .help-block,
+html[data-lz-light] .has-error .control-label {
+  color: var(--lz-red);
+}
+html[data-lz-light] .has-error .form-control {
+  border-color: var(--lz-red);
+}
+html[data-lz-light] .log-cyan {
+  color: #1b7c83;
+}
+html[data-lz-light] .blocked-row td {
+  background-color: rgba(207, 34, 46, 0.06);
+}
+html[data-lz-light] .table-hover > tbody > tr.blocked-row:hover > td {
+  background-color: rgba(207, 34, 46, 0.12);
+}
+html[data-lz-light] #output .log-entry.pt-log-blocked,
+html[data-lz-light] #output .log-entry:has(> strong.log-red) {
+  background: rgba(207, 34, 46, 0.08);
+}
+/* Network rows: must stay in rgb() form for the page script - the variables hold hex colours */
+html[data-lz-light] .network-recent { background-color: var(--lz-net-recent); }
+html[data-lz-light] .network-old { background-color: var(--lz-net-old); }
+html[data-lz-light] .network-older { background-color: var(--lz-net-older); }
+html[data-lz-light] .network-never { background-color: var(--lz-net-never); }
+html[data-lz-light] .network-gradient {
+  background-image: linear-gradient(to right, var(--lz-net-recent) 0%, var(--lz-net-old) 100%);
+}
+/* buttons keep a dark fill with white text in the light palettes too */
+html[data-lz-light] .btn-success:hover,
+html[data-lz-light] .btn-success:focus,
+html[data-lz-light] .btn-success:active,
+html[data-lz-light] .btn-success.active {
+  background-color: var(--lz-accent);
+  border-color: var(--lz-accent);
+  color: #fff;
+}
+html[data-lz-light] .pt-versions > a.pt-update > i,
+html[data-lz-light] .pt-versions > a.pt-update > b {
+  color: var(--lz-amber);
+}
+
+/* ==========================================================================
+   Dark / Light switch at the bottom of the sidebar (built by the add-on)
+   Sits in the free space between "Log out" and the version tiles; the 10 px gap
+   keeps its focus ring off the tiles. The chosen scheme is stored per browser.
+   ========================================================================== */
+.pt-scheme {
+  display: flex;
+  flex: none;
+  margin: auto 8px 0;
+  padding-top: 7px;
+  border-top: 1px solid var(--lz-border);
+}
+.pt-scheme + .pt-versions {
+  margin-top: 7px; /* the inset focus ring of the switch never reaches the tiles */
+  padding-top: 0;
+  border-top: 0;
+}
+.pt-scheme > .seg {
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+  background: var(--lz-bg);
+  border: 1px solid var(--lz-border);
+  border-radius: var(--lz-radius);
+}
+.pt-scheme button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 4px 4px;
+  margin: 0;
+  background: transparent;
+  border: 0;
+  color: var(--lz-text3);
+  font-family: var(--lz-mono);
+  font-size: 11px;
+  line-height: 18px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.pt-scheme button:hover {
+  color: var(--lz-text);
+}
+.pt-scheme button:focus-visible {
+  outline: 0;
+  box-shadow: inset 0 0 0 2px var(--lz-green);
+}
+.pt-scheme button.on {
+  background: var(--lz-green-dim);
+  color: var(--lz-green);
+}
+@media (min-width: 768px) {
+  body.sidebar-collapse .pt-scheme {
+    margin: auto 6px 0;
+  }
+  body.sidebar-collapse .pt-scheme > .seg {
+    flex-direction: column;
+  }
+  body.sidebar-collapse .pt-scheme button > span {
+    display: none;
+  }
+}
+
 /* >>> layout:islands
    ==========================================================================
    "Islands" layout: header, sidebar and footer as separate, rounded cards
@@ -2763,6 +3092,7 @@ html.pt-versions-ready .sidebar-menu {
 }
 
 :root {
+  --pt-light: var(--theme-light, paper); /* light palette used by the Dark / Light switch */
   --isl-gap: var(--theme-gap, 12px);
   --isl-radius: var(--theme-radius, 10px);
   --isl-backdrop: var(--lz-bg);

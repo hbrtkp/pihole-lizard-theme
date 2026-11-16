@@ -3,11 +3,13 @@
 A dark theme for the Pi-hole v6 web interface (Syne + JetBrains Mono), with an installer
 that survives Pi-hole updates.
 
-**Version:** 1.1.0 · **Tested with:** pi-hole/web `master`, commit `fb699c4` (2026-10-17), Chart.js 4.5.1
+**Version:** 1.2.0 · **Tested with:** pi-hole/web `master`, commit `fb699c4` (2026-10-17), Chart.js 4.5.1
 
 Questions and feedback: [discussion on the Pi-hole forum](https://discourse.pi-hole.net/t/theme-pi-hole-lizard-theme/88412).
 
 ![Pi-hole dashboard with the Lizard theme](lizard-theme.jpg)
+
+![Dark theme and the five light palettes](lizard-palettes.jpg)
 
 ## What you get
 
@@ -15,6 +17,8 @@ Questions and feedback: [discussion on the Pi-hole forum](https://discourse.pi-h
 - dashboard statistics in one box, smooth charts,
 - no top bar and no footer: "Toggle menu", "Log out" and the Pi-hole versions live at the
   bottom of the sidebar,
+- a Dark / Light switch at the bottom of the sidebar; the light side uses one of five
+  palettes — paper (default), sand, mint, slate, contrast,
 - the theme comes back by itself after the Sunday Pi-hole update and after a reboot.
 
 Nothing about DNS, blocking or security is touched — the theme only changes the look of
@@ -44,6 +48,15 @@ If the panel still looks stock after an update you started by hand (`pihole -up`
 
 ```bash
 sudo pihole-theme reapply
+```
+
+## Light palette
+
+The switch remembers the choice per browser. Which light palette it uses is set once
+on the Pi:
+
+```bash
+sudo pihole-theme set light sand      # paper | sand | mint | slate | contrast
 ```
 
 ## Update the theme

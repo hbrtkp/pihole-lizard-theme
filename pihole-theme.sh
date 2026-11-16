@@ -2,9 +2,9 @@
 # ============================================================================
 # pihole-theme.sh — "lizard" theme for Pi-hole v6
 #
-# Dark theme in the style of the TheLizardWizard guide (Syne + JetBrains Mono):
-# boxes with a title bar and a green dot, statistics tiles as small boxes, no top
-# bar (logout and menu toggle live at the bottom of the sidebar).
+# Dark theme (Syne + JetBrains Mono): boxes with a title bar and a green dot,
+# dashboard statistics in one box, no top bar and no footer (logout, menu toggle
+# and the Pi-hole versions live at the bottom of the sidebar).
 #
 # Pi-hole v6 has a fixed list of themes (built into FTL), so this theme takes
 # over the SLOT of the built-in dark theme "high-contrast-dark".
@@ -19,6 +19,7 @@
 #   sudo bash pihole-theme.sh install            # install / update
 #   sudo pihole-theme layout islands|joined      # separate cards / joined panels
 #   sudo pihole-theme set accent '#hex' | gap N | radius N | reset
+#   sudo pihole-theme set light paper|sand|mint|slate|contrast   # palette behind the sidebar "Light" switch
 #   sudo pihole-theme brand "Name" | off         # header text instead of "Pi-hole"
 #   sudo pihole-theme addons on|off              # charts, favicon, temperature, server status
 #   sudo pihole-theme status-lines lists bans ...  # which server status lines to collect and show
@@ -27,7 +28,7 @@
 # ============================================================================
 set -u
 
-VERSION="1.1.0"
+VERSION="1.2.0"
 TESTED_WEB="pi-hole/web master, commit fb699c4 (2026-10-17), Chart.js 4.5.1"
 MARKER="pihole-theme"
 STORE="${STORE:-/opt/pihole-theme}"
@@ -37,6 +38,7 @@ CSS="lizard.css"
 SLOT="high-contrast-dark"
 ADDON_JS="pihole-theme-addons.js"
 ADDON_MARK="pihole-theme-addons"
+SCHEME_MARK="pihole-theme-scheme"   # one-line script in header.lp: applies the saved Dark / Light choice before paint
 STATUS_JSON="pihole-theme-status.json"
 SELF="$(readlink -f "$0")"
 SRC_DIR="$(dirname "$SELF")"
@@ -58,6 +60,7 @@ theme_dir() {
 }
 admin_dir() { dirname "$(dirname "$1")"; }
 footer_lp() { echo "$(admin_dir "$1")/scripts/lua/footer.lp"; }
+header_lp() { echo "$(admin_dir "$1")/scripts/lua/header.lp"; }
 is_ours() { [ -f "$1" ] && grep -q "$MARKER" "$1"; }
 
 # Mix a #rrggbb colour with another one in the given ratio (0-100 of the first).
@@ -94,6 +97,7 @@ build_css() {
             echo "  --theme-accent-bright: $(mix "$accent" "#ffffff" 82);"
             ;;
           gap) echo "  --theme-gap: ${v}px;" ;;
+          light) echo "  --theme-light: $v;" ;;
           radius) echo "  --theme-radius: ${v}px;" ;;
         esac
       done < "$STORE/params"
@@ -151,10 +155,27 @@ restore_slot() {
   return 0
 }
 
+# The Dark / Light choice lives in the browser (localStorage). This one-line script in
+# header.lp, right after the theme stylesheet, applies it before the page is painted,
+# so a light page does not flash dark on every load. Idempotent.
+scheme_hook_apply() {
+  local lp="$1"
+  [ -f "$lp" ] || return 0
+  grep -q "$SCHEME_MARK" "$lp" && return 0
+  grep -q "theme.name.. '.css'" "$lp" || return 0
+  sed -i "/theme.name.. '.css'/a <script>/* $SCHEME_MARK */try{if(localStorage.getItem(\"pt-scheme\")===\"light\"){var p=getComputedStyle(document.documentElement).getPropertyValue(\"--pt-light\").trim()||\"paper\";document.documentElement.setAttribute(\"data-lz-scheme\",p);document.documentElement.setAttribute(\"data-lz-light\",\"\")}}catch(e){}</script>" "$lp"
+}
+scheme_hook_remove() {
+  local lp="$1"
+  [ -f "$lp" ] && grep -q "$SCHEME_MARK" "$lp" && sed -i "/$SCHEME_MARK/d" "$lp"
+  return 0
+}
+
 # Remove the add-on line from the footer, the script file and the server status file
 addons_remove() {
   local tdir="$1" lp
   lp="$(footer_lp "$tdir")"
+  scheme_hook_remove "$(header_lp "$tdir")"
   [ -f "$lp" ] && grep -q "$ADDON_MARK" "$lp" && sed -i "/$ADDON_MARK/d" "$lp"
   rm -f "$tdir/$ADDON_JS" "$tdir/$STATUS_JSON"
   return 0
@@ -169,6 +190,7 @@ addons_apply() {
   cp -f "$STORE/$ADDON_JS" "$tdir/$ADDON_JS"
   chown --reference="$tdir" "$tdir/$ADDON_JS" 2> /dev/null; chmod 644 "$tdir/$ADDON_JS"
   [ -f "$lp" ] || { say "  [i] $lp not found — add-ons skipped"; return 0; }
+  scheme_hook_apply "$(header_lp "$tdir")"
   grep -q "$ADDON_MARK" "$lp" && return 0
   if grep -q "scripts/js/footer.js" "$lp"; then
     sed -i "/scripts\/js\/footer.js/a <script src=\"<?=pihole.fileversion('style/themes/$ADDON_JS')?>\"></script>" "$lp"
@@ -354,7 +376,8 @@ cmd_set() {
     accent) echo "$val" | grep -Eq '^#[0-9a-fA-F]{6}$' || die "accent as #rrggbb, e.g. '#ff8800' (in quotes)" ;;
     gap) echo "$val" | grep -Eq '^[0-9]{1,2}$' && [ "$val" -ge 4 ] && [ "$val" -le 40 ] || die "card gap: a number 4-40 (px)" ;;
     radius) echo "$val" | grep -Eq '^[0-9]{1,2}$' && [ "$val" -le 40 ] || die "card radius: a number 0-40 (px)" ;;
-    *) die "usage: pihole-theme set accent '#rrggbb' | gap N | radius N | reset" ;;
+    light) case "$val" in paper | sand | mint | slate | contrast) ;; *) die "light palette: paper | sand | mint | slate | contrast" ;; esac ;;
+    *) die "usage: pihole-theme set accent '#rrggbb' | gap N | radius N | light <name> | reset" ;;
   esac
   touch "$STORE/params"
   grep -v "^$key=" "$STORE/params" > "$STORE/params.tmp" || true
@@ -486,6 +509,7 @@ cmd_status() {
   echo "Layout          : $(opt layout islands)"
   if [ -s "$STORE/params" ]; then echo "Parameters      : $(tr '\n' ' ' < "$STORE/params")"; else echo "Parameters      : default"; fi
   echo "Brand           : $(opt brand '(Pi-hole)')"
+  echo "Light palette   : $(grep '^light=' "$STORE/params" 2> /dev/null | cut -d= -f2)$(grep -q '^light=' "$STORE/params" 2> /dev/null || echo 'paper (default)')"
   echo "Notifications   : $(mail_to)"
   echo "Server status   : $(status_lines)$([ -f "$STORE/statuslines" ] || echo ' (default)')"
   if is_ours "$tdir/$s.css"; then echo "Slot $s : CUSTOM theme ($(wc -c < "$tdir/$s.css") B)"
@@ -524,6 +548,7 @@ cmd_doctor() {
   has "$adir/scripts/lua/sidebar.lp" 'class="user-panel"' && has "$adir/scripts/lua/sidebar.lp" 'id="memory"' && ok "status panel has the known structure (sidebar.lp)" || warn "status panel structure changed — temperature and server status may not show"
   if [ "$(opt addons on)" = "on" ]; then
     has "$lp" "scripts/js/footer.js" && ok "footer has the add-on hook (footer.lp)" || fail "footer.lp does not load footer.js the known way — the add-on will not be attached"
+    has "$(header_lp "$tdir")" "$SCHEME_MARK" && ok "Dark / Light choice is applied before paint (header.lp)" || warn "header.lp has no scheme hook — a light page flashes dark on load; run: sudo pihole-theme reapply"
     has "$lp" "$ADDON_MARK" && [ -f "$tdir/$ADDON_JS" ] && ok "add-on is attached and deployed" || fail "add-on is not attached — run: sudo pihole-theme reapply"
     # the theme hides the top bar: the add-on adds logout and menu toggle to the sidebar
     has "$adir/scripts/lua/sidebar.lp" 'class="sidebar-menu' && has "$adir/scripts/lua/header_authenticated.lp" 'data-toggle="push-menu"' && ok "sidebar and menu toggle have the known structure" || warn "sidebar or menu toggle structure changed — check that Toggle menu and Log out are at the bottom of the menu"

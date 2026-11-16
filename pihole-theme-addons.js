@@ -10,6 +10,7 @@
      8. Tail log: readable box title instead of the tail -F command
      9. Dashboard: blocked-percentage bar and link tooltips in the statistics box
     10. Digit grouping for four-digit counters (dashboard and sidebar)
+    11. Dark / Light switch at the bottom of the sidebar
    Loaded by one line added to scripts/lua/footer.lp right after footer.js
    (done by pihole-theme.sh; a Pi-hole update removes it, cron restores it).
    The file runs BEFORE the charts are created (they are built only after the
@@ -768,4 +769,70 @@
     fix(el);
     new MutationObserver(function () { fix(el); }).observe(el, { childList: true, characterData: true, subtree: true });
   });
+})();
+
+/* --------------------------------------------------------------------------
+   11. Dark / Light switch at the bottom of the sidebar
+       "Light" applies the palette named by --pt-light (pihole-theme set light
+       <name>, default "paper") by setting data-lz-scheme on <html>; the choice
+       is kept per browser in localStorage ("pt-scheme") and re-applied before
+       the page is painted by the one-line script the installer adds to
+       header.lp. The switch reloads the page, so the charts and the favicon
+       pick up the new colours.
+   -------------------------------------------------------------------------- */
+(function () {
+  "use strict";
+
+  var KEY = "pt-scheme";
+  var side = document.querySelector(".main-sidebar > .sidebar");
+  var root = document.documentElement;
+
+  function stored() {
+    try { return localStorage.getItem(KEY) === "light" ? "light" : "dark"; } catch (e) { return "dark"; }
+  }
+  function lightName() {
+    var n = getComputedStyle(root).getPropertyValue("--pt-light").trim().replace(/["']/g, "");
+    return /^[a-z]+$/.test(n) ? n : "paper";
+  }
+  function apply(mode) {
+    if (mode === "light") {
+      root.setAttribute("data-lz-scheme", lightName());
+      root.setAttribute("data-lz-light", "");
+    } else {
+      root.removeAttribute("data-lz-scheme");
+      root.removeAttribute("data-lz-light");
+    }
+  }
+
+  // fallback for pages without the header.lp script (the attribute is then set here, late)
+  apply(stored());
+  if (!side) return;
+
+  var box = document.createElement("div");
+  box.className = "pt-scheme";
+  var seg = document.createElement("div");
+  seg.className = "seg";
+  [["dark", "fa-moon", "Dark"], ["light", "fa-sun", "Light"]].forEach(function (d) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.dataset.mode = d[0];
+    b.title = d[2] === "Light" ? "Light (" + lightName() + ")" : "Dark";
+    var i = document.createElement("i");
+    i.className = "fa " + d[1];
+    var t = document.createElement("span");
+    t.textContent = d[2];
+    b.appendChild(i);
+    b.appendChild(t);
+    if (stored() === d[0]) b.className = "on";
+    b.addEventListener("click", function () {
+      if (stored() === d[0]) return;
+      try { localStorage.setItem(KEY, d[0]); } catch (e) {}
+      apply(d[0]);
+      location.reload();
+    });
+    seg.appendChild(b);
+  });
+  box.appendChild(seg);
+  var versions = side.querySelector(".pt-versions");
+  if (versions) side.insertBefore(box, versions); else side.appendChild(box);
 })();
