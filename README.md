@@ -7,6 +7,9 @@ that survives Pi-hole updates.
 
 Questions and feedback: [discussion on the Pi-hole forum](https://discourse.pi-hole.net/t/theme-pi-hole-lizard-theme/88412).
 
+If you like this theme and want to say thanks, you can buy me a coffee:
+[PayPal](https://www.paypal.com/paypalme/hbrtkp) · [buycoffee.to](https://buycoffee.to/hbrtkp)
+
 ![Pi-hole dashboard with the Lizard theme](lizard-theme.jpg)
 
 ![Dark theme and the five light palettes](lizard-palettes.jpg)
