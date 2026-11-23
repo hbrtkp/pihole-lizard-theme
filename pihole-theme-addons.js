@@ -1,16 +1,15 @@
 /* ==========================================================================
    pihole-theme-addons — add-ons for Pi-hole v6 themes
      1. Dashboard chart skin (Chart.js 4)
-     2. Browser favicon in the theme colours
-     3. CPU temperature indicator in the status panel
-     4. Server status in the status panel (clock, resolver, list age, bans)
-     5. Logout and menu toggle as sidebar entries; sidebar height
-     6. Tail log: highlighting of every kind of block in pihole.log
-     7. Pi-hole versions at the bottom of the sidebar (instead of the footer)
-     8. Tail log: readable box title instead of the tail -F command
-     9. Dashboard: blocked-percentage bar and link tooltips in the statistics box
-    10. Digit grouping for four-digit counters (dashboard and sidebar)
-    11. Dark / Light switch at the bottom of the sidebar
+     2. CPU temperature indicator in the status panel
+     3. Server status in the status panel (clock, resolver, list age, bans)
+     4. Logout and menu toggle as sidebar entries; sidebar height
+     5. Tail log: highlighting of every kind of block in pihole.log
+     6. Pi-hole versions at the bottom of the sidebar (instead of the footer)
+     7. Tail log: readable box title instead of the tail -F command
+     8. Dashboard: blocked-percentage bar and link tooltips in the statistics box
+     9. Digit grouping for four-digit counters (dashboard and sidebar)
+    10. Dark / Light switch at the bottom of the sidebar
    Loaded by one line added to scripts/lua/footer.lp right after footer.js
    (done by pihole-theme.sh; a Pi-hole update removes it, cron restores it).
    The file runs BEFORE the charts are created (they are built only after the
@@ -230,40 +229,7 @@
 })();
 
 /* --------------------------------------------------------------------------
-   Browser favicon in the theme colours: a rounded square with a ring.
-   Colours: --brand-fav-bg / --brand-fav-fg in the theme CSS. Replaced on the
-   fly (without touching Pi-hole files), so it does not apply to the login page.
-   -------------------------------------------------------------------------- */
-(function () {
-  "use strict";
-  var probe = document.createElement("span");
-  probe.style.cssText = "position:absolute;visibility:hidden;color:var(--brand-fav-fg);background-color:var(--brand-fav-bg)";
-  if (!document.body) return;
-  document.body.appendChild(probe);
-  var cs = getComputedStyle(probe);
-  var fg = cs.color;
-  var bg = cs.backgroundColor;
-  probe.remove();
-  // variables not set -> transparent background: keep the stock icon
-  if (!bg || bg === "rgba(0, 0, 0, 0)" || bg === "transparent") return;
-
-  var svg =
-    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">' +
-    '<rect width="64" height="64" rx="16" fill="' + bg + '"/>' +
-    '<circle cx="32" cy="32" r="14" fill="none" stroke="' + fg + '" stroke-width="9"/>' +
-    "</svg>";
-  var href = "data:image/svg+xml," + encodeURIComponent(svg);
-  var links = document.querySelectorAll('link[rel~="icon"], link[rel="mask-icon"]');
-  for (var i = 0; i < links.length; i++) links[i].parentNode.removeChild(links[i]);
-  var link = document.createElement("link");
-  link.rel = "icon";
-  link.type = "image/svg+xml";
-  link.href = href;
-  document.head.appendChild(link);
-})();
-
-/* --------------------------------------------------------------------------
-   3. CPU temperature in the status panel
+   2. CPU temperature in the status panel
       Pi-hole v6 does not show it in the interface, but FTL exposes it at
       /api/info/sensors (cpu_temp, hot_limit, unit). Fifth line under
       "Memory usage", in the layout of the Pi-hole indicators (icon + text),
@@ -339,7 +305,7 @@
 })();
 
 /* --------------------------------------------------------------------------
-   4. Server status in the status panel
+   3. Server status in the status panel
       Pi-hole does not expose this data, so a script on the Pi writes it to a
       file every minute (pihole-theme.sh write-status, from cron):
         style/themes/pihole-theme-status.json
@@ -428,7 +394,7 @@
 })();
 
 /* --------------------------------------------------------------------------
-   5. Panel tools in the sidebar + sidebar height
+   4. Panel tools in the sidebar + sidebar height
       The theme may hide the Pi-hole top bar. That bar, however, holds the only
       logout button and the menu toggle, so both are added here as entries at
       the bottom of the sidebar. They are always created but hidden (hidden
@@ -568,7 +534,7 @@
 })();
 
 /* --------------------------------------------------------------------------
-   6. Tail log (pihole.log): highlighting of blocked queries
+   5. Tail log (pihole.log): highlighting of blocked queries
       Pi-hole colours only the lines with "gravity blocked" or "denied" red.
       FTL also logs other kinds of blocks - "special domain", "blocked
       upstream", blocks during CNAME inspection - which stay grey.
@@ -607,7 +573,7 @@
 })();
 
 /* --------------------------------------------------------------------------
-   7. Pi-hole versions at the bottom of the sidebar (instead of the footer)
+   6. Pi-hole versions at the bottom of the sidebar (instead of the footer)
       The source is the #versions list that Pi-hole itself fills in the footer
       (with its "Update available!" logic and links to the release notes) - the
       add-on fetches nothing itself, it only rewrites the list into tiles:
@@ -675,7 +641,7 @@
 })();
 
 /* --------------------------------------------------------------------------
-   8. Tail log: readable box title
+   7. Tail log: readable box title
       Pi-hole shows the command "tail -F /var/log/pihole/pihole.log" in the title.
       The add-on shows "Tail log" and just the file name; the full command stays
       in the tooltip on hover.
@@ -707,7 +673,7 @@
 })();
 
 /* --------------------------------------------------------------------------
-   9. Dashboard: statistics box
+   8. Dashboard: statistics box
       Width of the bar under the blocked percentage (the --pt-blocked variable,
       read by the CSS) and a tooltip on every block with the text of the old
       tile footer ("14 active clients", "Manage lists"), which is now an
@@ -738,7 +704,7 @@
 })();
 
 /* --------------------------------------------------------------------------
-   10. Digit grouping for four-digit counters (dashboard and sidebar)
+   9. Digit grouping for four-digit counters (dashboard and sidebar)
        Pi-hole formats the counters with Intl.NumberFormat(). In some languages
        (Polish among them) the locale rules group digits only from five digits
        up, so "3962" stands next to "27 715". The add-on inserts the same
@@ -772,12 +738,12 @@
 })();
 
 /* --------------------------------------------------------------------------
-   11. Dark / Light switch at the bottom of the sidebar
+   10. Dark / Light switch at the bottom of the sidebar
        "Light" applies the palette named by --pt-light (pihole-theme set light
        <name>, default "paper") by setting data-lz-scheme on <html>; the choice
        is kept per browser in localStorage ("pt-scheme") and re-applied before
        the page is painted by the one-line script the installer adds to
-       header.lp. The switch reloads the page, so the charts and the favicon
+       header.lp. The switch reloads the page, so the charts
        pick up the new colours.
    -------------------------------------------------------------------------- */
 (function () {

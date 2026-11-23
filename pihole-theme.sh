@@ -11,7 +11,7 @@
 # "pihole updatePihole" restores the stock interface files — the installer
 # adds a cron job that re-applies the theme after an update.
 #
-# Add-ons (pihole-theme-addons.js): chart skin, favicon, CPU temperature and
+# Add-ons (pihole-theme-addons.js): chart skin, CPU temperature and
 # server status in the status panel. They need one line in
 # scripts/lua/footer.lp — the installer adds it and restores it after an update.
 #
@@ -21,14 +21,14 @@
 #   sudo pihole-theme set accent '#hex' | gap N | radius N | reset
 #   sudo pihole-theme set light paper|sand|mint|slate|contrast   # palette behind the sidebar "Light" switch
 #   sudo pihole-theme brand "Name" | off         # header text instead of "Pi-hole"
-#   sudo pihole-theme addons on|off              # charts, favicon, temperature, server status
+#   sudo pihole-theme addons on|off              # charts, temperature, server status
 #   sudo pihole-theme status-lines lists bans ...  # which server status lines to collect and show
 #   sudo pihole-theme mail test | <address> | off | default   # notification when the theme does not come back
 #   sudo pihole-theme reapply | status | doctor | version | restore
 # ============================================================================
 set -u
 
-VERSION="1.2.0"
+VERSION="1.2.1"
 TESTED_WEB="pi-hole/web master, commit fb699c4 (2026-10-17), Chart.js 4.5.1"
 MARKER="pihole-theme"
 STORE="${STORE:-/opt/pihole-theme}"
@@ -253,7 +253,7 @@ cmd_install() {
   copy_into_slot "$tdir" || exit 1
   say "  [✓] Lizard theme deployed to slot: $tdir/$slot.css"
   if [ "$(opt addons)" = "on" ] && grep -q "$ADDON_MARK" "$(footer_lp "$tdir")" 2> /dev/null; then
-    say "  [✓] Add-ons enabled: charts, favicon, temperature, server status, menu"
+    say "  [✓] Add-ons enabled: charts, temperature, server status, menu"
   fi
   write_cron
   say "  [✓] Cron: $CRON_FILE"

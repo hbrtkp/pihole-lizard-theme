@@ -1562,8 +1562,6 @@ body:not(.sidebar-collapse) .user-panel > .info > #server-status .server-status-
    ========================================================================== */
 :root {
   --chart-palette: #3fb950, #58a6ff, #bc8cff, #d29922, #f85149, #39c5cf, #f778ba, #8b949e, #56d364, #79c0ff, #d2a8ff, #e3b341, #ff7b72, #76e3ea, #ffa198, #6e7681;
-  --brand-fav-bg: var(--lz-bg3);
-  --brand-fav-fg: var(--lz-green);
   --chart-center: var(--lz-text);
   --chart-font: "JetBrains Mono", ui-monospace, Consolas, monospace; /* numbers on charts like tile values */
 }

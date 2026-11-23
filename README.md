@@ -3,7 +3,7 @@
 A dark theme for the Pi-hole v6 web interface (Syne + JetBrains Mono), with an installer
 that survives Pi-hole updates.
 
-**Version:** 1.2.0 · **Tested with:** pi-hole/web `master`, commit `fb699c4` (2026-10-17), Chart.js 4.5.1
+**Version:** 1.2.1 · **Tested with:** pi-hole/web `master`, commit `fb699c4` (2026-10-17), Chart.js 4.5.1
 
 Questions and feedback: [discussion on the Pi-hole forum](https://discourse.pi-hole.net/t/theme-pi-hole-lizard-theme/88412).
 
